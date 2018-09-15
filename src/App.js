@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Card from './components/card';
+import Hero from './components/hero';
 import CardModel from './model/card-model';
+import HeroModel from './model/hero-model';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -27,12 +29,17 @@ const PlayerCardsArea = styled.div`
   width: 100%;
   height: ${playerAreaHeight}px;
   display: flex;
+  align-items: center;
   padding: 10px 20px;
   border: 2px solid lightgreen;
   box-sizing: border-box;
   border-radius: 10px;
 
   .card {
+    margin-right: 20px;
+  }
+
+  .person {
     margin-right: 20px;
   }
 `;
@@ -57,7 +64,7 @@ const Dustbin = styled.div`
 // 创建一个卡牌实例
 const firstCard = new CardModel({
   name: '攻击',
-  desc: '🐓啦',
+  desc: '🐓',
   attack: 1,
   armore: 0,
 });
@@ -68,6 +75,12 @@ const secondCard = new CardModel({
   attack: 0,
   armor: 1,
 });
+
+
+const hero = new HeroModel({
+  life: 20,
+  armor: 0
+})
 
 class App extends Component {
   constructor() {
@@ -127,9 +140,13 @@ class App extends Component {
         }
         </Dustbin>
 
-
-
         <PlayerCardsArea>
+          <Hero 
+            life={hero.life}
+            armor={hero.armor}
+            maxLife={hero.maxLife}
+            className="person"
+          />
         {
           playerCards.map((card, index) => {
             return <Card

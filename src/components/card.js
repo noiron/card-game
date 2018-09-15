@@ -19,6 +19,10 @@ const Wrapper = styled.div`
     font-size: 20px;
     margin-bottom: 10%;
   }
+
+  .desc.emoji {
+      font-size: 36px;
+    }
 `;
 
 class Card extends Component {
@@ -38,7 +42,7 @@ class Card extends Component {
     return (
       <Wrapper className="card" onDoubleClick={this.handleDoubleClick}>
         <p className="name">{name}</p>
-        <p>{desc}</p>
+        <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack > 0 && <p>攻击：{attack}</p>}
         {armor >0  && <p>护甲：{armor}</p>}
       </Wrapper>
