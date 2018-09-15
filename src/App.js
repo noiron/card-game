@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Card from './components/card';
 import Hero from './components/hero';
+import Boss from './components/boss';
 import CardModel from './model/card-model';
 import HeroModel from './model/hero-model';
+import BossModel from './model/boss-model';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -21,6 +23,9 @@ const EnemyArea = styled.div`
   border: 2px solid pink;
   box-sizing: border-box;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const playerAreaHeight = 150;
@@ -80,7 +85,12 @@ const secondCard = new CardModel({
 const hero = new HeroModel({
   life: 20,
   armor: 0
-})
+});
+
+const boss = new BossModel({
+  life: 50,
+  armor: 0
+});
 
 class App extends Component {
   constructor() {
@@ -120,7 +130,13 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
-        <EnemyArea />
+        <EnemyArea>
+          <Boss 
+            life={boss.life}
+            armor={boss.armor}
+          />
+
+        </EnemyArea>
 
         <Dustbin>
         {
