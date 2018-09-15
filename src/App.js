@@ -135,6 +135,11 @@ class App extends Component {
       usedCards: newUserdCards,
     });
 
+    this.calculateCardEffect(currentCard);
+
+  }
+
+  calculateCardEffect = (currentCard) => {
     // 出牌效果
     let effectName;
     let effectValue = 0;
@@ -173,9 +178,7 @@ class App extends Component {
         newEffects.splice(newEffects.length - 2);
         this.setState({ effects: newEffects });
       }, 1500);
-
     }
-
   }
 
   render() {
