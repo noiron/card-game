@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import Card from './components/card';
 import Hero from './components/hero';
 import Boss from './components/boss';
+import Effect from './components/effect';
 import CardModel from './model/card-model';
 import HeroModel from './model/hero-model';
 import BossModel from './model/boss-model';
+import EffectModel from './model/effect-model';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -70,7 +72,7 @@ const Dustbin = styled.div`
 const firstCard = new CardModel({
   name: '攻击',
   desc: '🐓',
-  attack: 1,
+  attack: 100,
   armore: 0,
 });
 
@@ -81,6 +83,12 @@ const secondCard = new CardModel({
   armor: 1,
 });
 
+const thirdCard = new CardModel({
+  name: '攻击',
+  desc: '⚔',
+  attack: 1,
+  armor: 0,
+});
 
 const hero = new HeroModel({
   life: 20,
@@ -99,7 +107,7 @@ class App extends Component {
     this.state = {
 
       // 玩家的牌组
-      playerCards: [firstCard, secondCard],
+      playerCards: [firstCard, secondCard, thirdCard],
 
       // 敌人牌组
       enemyCards: [firstCard],
@@ -107,12 +115,16 @@ class App extends Component {
       // 使用过的牌
       usedCards: [firstCard],
 
+
+      effects: []
+
     }
   }
 
 
-  // 玩家出牌，根据索引从玩家手上的牌组中移除这张牌
+  // 玩家出牌
   playCard = index => {
+    // 根据索引从玩家手上的牌组中移除这张牌
     const { playerCards, usedCards } = this.state;
     const currentCard = playerCards[index]; 
     const leftCards = playerCards.filter((card, i) => index !== i);
@@ -122,11 +134,52 @@ class App extends Component {
       playerCards: leftCards,
       usedCards: newUserdCards,
     });
+
+    // 出牌效果
+    let effectName;
+    let effectValue = 0;
+    let effect = null;
+    if (currentCard.name === '攻击') {
+      effectName = '生命值';
+      effectValue = -currentCard.attack;
+
+      effect = new EffectModel({
+        name: effectName,
+        value: effectValue,
+        target: 'enemy'
+      });
+
+      boss.life += effectValue;
+
+    } else if (currentCard.name === '防御') {
+      effectName = '护甲';
+      effectValue = currentCard.armor;
+
+      effect = new EffectModel({
+        name: effectName,
+        value: '+' + effectValue,
+        target: 'player'
+      });
+
+      hero.armor += effectValue;
+    }
+
+    if (effect) {
+      const newEffects = [...this.state.effects, effect];
+      this.setState({ effects: newEffects });
+
+      // 等待后删除
+      setTimeout(() => {
+        newEffects.splice(newEffects.length - 2);
+        this.setState({ effects: newEffects });
+      }, 1500);
+
+    }
+
   }
 
-
   render() {
-    const { playerCards, usedCards } = this.state;
+    const { playerCards, usedCards, effects } = this.state;
 
     return (
       <Wrapper className="App">
@@ -141,7 +194,6 @@ class App extends Component {
         <Dustbin>
         {
           usedCards.map((card, index) => {
-            console.log('userCard', index);
             return <Card
               name={card.name}
               desc={card.desc}
@@ -177,6 +229,14 @@ class App extends Component {
           })
         }
         </PlayerCardsArea>
+
+        {effects.map(e => {
+          return <Effect
+            name={e.name}
+            value={e.value}
+            target={e.target}
+          />
+        })}
 
       </Wrapper>
     );

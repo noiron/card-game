@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 class Boss extends Component {
 
   render() {
-    const { life, maxLife, armor } = this.props;
+    const { life, armor } = this.props;
 
     return (
       <Wrapper className={this.props.className}>
