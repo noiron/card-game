@@ -4,10 +4,13 @@ import Card from './components/card';
 import Hero from './components/hero';
 import Boss from './components/boss';
 import Effect from './components/effect';
-import CardModel from './model/card-model';
+// import CardModel from './model/card-model';
 import HeroModel from './model/hero-model';
 import BossModel from './model/boss-model';
 import EffectModel from './model/effect-model';
+import GameOver from './components/game-over';
+
+import hero_deck from './hero-deck';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -68,28 +71,6 @@ const Dustbin = styled.div`
 `;
 
 
-// 创建一个卡牌实例
-const firstCard = new CardModel({
-  name: '攻击',
-  desc: '🐓',
-  attack: 100,
-  armore: 0,
-});
-
-const secondCard = new CardModel({
-  name: '防御',
-  desc: '🛡',
-  attack: 0,
-  armor: 1,
-});
-
-const thirdCard = new CardModel({
-  name: '攻击',
-  desc: '⚔',
-  attack: 1,
-  armor: 0,
-});
-
 const hero = new HeroModel({
   life: 20,
   armor: 0
@@ -107,16 +88,17 @@ class App extends Component {
     this.state = {
 
       // 玩家的牌组
-      playerCards: [firstCard, secondCard, thirdCard],
+      playerCards: [...hero_deck],
 
       // 敌人牌组
-      enemyCards: [firstCard],
+      enemyCards: [...hero_deck.slice(0, 2)],
 
       // 使用过的牌
-      usedCards: [firstCard],
+      usedCards: [hero_deck[0]],
 
-
-      effects: []
+      effects: [],
+      status: '',
+      currentTurn: 'hero',
 
     }
   }
@@ -124,6 +106,11 @@ class App extends Component {
 
   // 玩家出牌
   playCard = index => {
+    
+    if (this.state.currentTurn !== 'hero') {
+      return;
+    }
+
     // 根据索引从玩家手上的牌组中移除这张牌
     const { playerCards, usedCards } = this.state;
     const currentCard = playerCards[index]; 
@@ -156,6 +143,10 @@ class App extends Component {
 
       boss.life += effectValue;
 
+      if (boss.life <= 0) {
+        this.setState({ status: 'over' });
+      }
+
     } else if (currentCard.name === '防御') {
       effectName = '护甲';
       effectValue = currentCard.armor;
@@ -181,8 +172,30 @@ class App extends Component {
     }
   }
 
+  nextTurn = () => {
+    this.setState({
+      currentTurn: 'boss'
+    });
+
+    this.bossStartAction();
+  }
+
+  bossStartAction() {
+    // boss 依次发牌
+
+    this.state.enemyCards.forEach((card, index) => {
+      setTimeout(() => this.calculateCardEffect(card), index * 2000);
+    })
+
+    setTimeout(() => {
+      this.setState({ currentTurn: 'hero' })
+    }, this.state.enemyCards.length * 2000)
+  }
+
+
+
   render() {
-    const { playerCards, usedCards, effects } = this.state;
+    const { playerCards, usedCards, effects, status } = this.state;
 
     return (
       <Wrapper className="App">
@@ -231,6 +244,9 @@ class App extends Component {
             ></Card>
           })
         }
+
+          {this.state.currentTurn === 'hero'
+            && <button onClick={this.nextTurn}>下一回合</button>}
         </PlayerCardsArea>
 
         {effects.map(e => {
@@ -241,6 +257,8 @@ class App extends Component {
           />
         })}
 
+
+        {status === 'over' && <GameOver />}
       </Wrapper>
     );
   }
