@@ -1,5 +1,6 @@
 class CardModel {
   constructor(info) {
+    this.id = info.id;
     this.name = info.name;
     this.desc = info.desc;
     this.attack = info.attack;

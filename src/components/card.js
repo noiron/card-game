@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   text-align: center;
   font-size: 14px;
   user-select: none;
+  border-radius: 8px;
 
   p {
     margin: 0;
