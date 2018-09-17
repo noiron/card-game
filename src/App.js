@@ -13,6 +13,8 @@ import GameOver from './components/game-over';
 import hero_deck from './decks/hero-deck';
 import boss_deck from './decks/boss-deck';
 
+import { card_target } from './constants';
+
 const Wrapper = styled.div`
   width: 700px;
   min-height: 500px;
@@ -106,7 +108,7 @@ class App extends Component {
 
 
   // 玩家出牌
-  playCard = index => {
+  playCard = (id, index) => {
     
     if (this.state.currentTurn !== 'hero') {
       return;
@@ -115,7 +117,7 @@ class App extends Component {
     // 根据索引从玩家手上的牌组中移除这张牌
     const { playerCards, usedCards } = this.state;
     const currentCard = playerCards[index]; 
-    const leftCards = playerCards.filter((card, i) => index !== i);
+    const leftCards = playerCards.filter(card => card.id !== id);
     const newUserdCards = [...usedCards, currentCard];
 
     this.setState({
@@ -132,6 +134,9 @@ class App extends Component {
     let effectName;
     let effectValue = 0;
     let effect = null;
+
+    // const { currentTurn } = this.state;
+
     if (currentCard.name === '攻击') {
       effectName = '生命值';
       effectValue = -currentCard.attack;
@@ -139,10 +144,14 @@ class App extends Component {
       effect = new EffectModel({
         name: effectName,
         value: effectValue,
-        target: 'enemy'
+        target: currentCard.target,
       });
 
-      boss.life += effectValue;
+      if (currentCard.target === card_target.enemy) {
+        boss.life += effectValue;
+      } else {
+        hero.life += effectValue;
+      }
 
       if (boss.life <= 0) {
         this.setState({ status: 'over' });
@@ -155,10 +164,14 @@ class App extends Component {
       effect = new EffectModel({
         name: effectName,
         value: '+' + effectValue,
-        target: 'player'
+        target: currentCard.target,
       });
 
-      hero.armor += effectValue;
+      if (currentCard.target === card_target.player) {
+        hero.armor += effectValue;
+      } else {
+        boss.armor += effectValue;
+      }
     }
 
     if (effect) {
@@ -239,7 +252,7 @@ class App extends Component {
               desc={card.desc}
               attack={card.attack}
               armor={card.armor}
-              playCard={() => this.playCard(index)}
+              playCard={() => this.playCard(card.id, index)}
 
               key={Math.random()}
             ></Card>

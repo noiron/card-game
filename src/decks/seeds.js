@@ -3,7 +3,8 @@ const seed0 = {
   name: '攻击',
   desc: '🐓',
   attack: 10,
-  armore: 0,
+  armor: 0,
+  positive: false,
 };
 
 const seed1 = {
@@ -11,6 +12,7 @@ const seed1 = {
   desc: '🛡',
   attack: 0,
   armor: 1,
+  positive: true,
 };
 
 const seed2 = {
@@ -18,6 +20,7 @@ const seed2 = {
   desc: '⚔',
   attack: 1,
   armor: 0,
+  positive: false,
 };
 
 
