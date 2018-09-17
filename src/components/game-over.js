@@ -29,7 +29,7 @@ class GameOver extends Component {
       <Wrapper>
         <h1>{title}</h1>
         {/* <p>{content}</p> */}
-        <button onClick={window.location.reload}>一键销毁</button>
+        <button onClick={() => window.location.reload()}>一键销毁</button>
       </Wrapper>
     )
   }

@@ -10,7 +10,8 @@ import BossModel from './model/boss-model';
 import EffectModel from './model/effect-model';
 import GameOver from './components/game-over';
 
-import hero_deck from './hero-deck';
+import hero_deck from './decks/hero-deck';
+import boss_deck from './decks/boss-deck';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -91,7 +92,7 @@ class App extends Component {
       playerCards: [...hero_deck],
 
       // 敌人牌组
-      enemyCards: [...hero_deck.slice(0, 2)],
+      enemyCards: [...boss_deck],
 
       // 使用过的牌
       usedCards: [hero_deck[0]],
