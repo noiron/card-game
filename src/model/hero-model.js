@@ -1,4 +1,8 @@
+import { observable } from 'mobx';
+
 class Hero {
+  @observable life;
+
   constructor(info) {
     this.life = info.life;
     this.maxLife = info.maxLife || 20;
