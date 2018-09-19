@@ -21,7 +21,7 @@ class GameOver extends Component {
 
     const { 
       title = '游戏结束',
-      content = '大侠请交钱再来'
+      // content = '大侠请交钱再来'
     } = this.props;
 
 

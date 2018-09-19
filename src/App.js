@@ -25,6 +25,14 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
+const TurnFlag = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  color: green;
+`;
+
 const EnemyArea = styled.div`
   width: 100%;
   height: 130px;
@@ -148,9 +156,9 @@ class App extends Component {
       });
 
       if (currentCard.target === card_target.enemy) {
-        boss.life += effectValue;
+        boss.receiveAttack(currentCard.attack);
       } else {
-        hero.life += effectValue;
+        hero.receiveAttack(currentCard.attack);
       }
 
       if (boss.life <= 0) {
@@ -168,9 +176,9 @@ class App extends Component {
       });
 
       if (currentCard.target === card_target.player) {
-        hero.armor += effectValue;
+        hero.addArmor(effectValue);
       } else {
-        boss.armor += effectValue;
+        boss.addArmor(effectValue);
       }
     }
 
@@ -213,6 +221,10 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
+        {this.state.currentTurn === 'hero'
+          ? <TurnFlag>你的回合</TurnFlag>
+          : <TurnFlag>对手的回合</TurnFlag>
+        }
         <EnemyArea>
           <Boss 
             life={boss.life}
