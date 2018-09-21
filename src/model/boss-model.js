@@ -1,4 +1,9 @@
+import { observable } from 'mobx';
+
 class Boss {
+  @observable life;
+  @observable armor;
+
   constructor(info) {
     this.life = info.life;
     this.armor = info.armor;

@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 
 class Hero {
   @observable life;
+  @observable armor;
 
   constructor(info) {
     this.life = info.life;

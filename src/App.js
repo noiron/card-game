@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { observer } from 'mobx-react';
+
 import Card from './components/card';
 import Hero from './components/hero';
 import Boss from './components/boss';
 import Effect from './components/effect';
-// import CardModel from './model/card-model';
-import HeroModel from './model/hero-model';
-import BossModel from './model/boss-model';
-import EffectModel from './model/effect-model';
 import GameOver from './components/game-over';
-
-import hero_deck from './decks/hero-deck';
-import boss_deck from './decks/boss-deck';
+import EffectModel from './model/effect-model';
 
 import { card_target } from './constants';
 
@@ -81,36 +77,15 @@ const Dustbin = styled.div`
   }
 `;
 
-
-const hero = new HeroModel({
-  life: 20,
-  armor: 0
-});
-
-const boss = new BossModel({
-  life: 50,
-  armor: 0
-});
-
+@observer
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-
-      // 玩家的牌组
-      playerCards: [...hero_deck],
-
-      // 敌人牌组
-      enemyCards: [...boss_deck],
-
-      // 使用过的牌
-      usedCards: [hero_deck[0]],
-
       effects: [],
       status: '',
       currentTurn: 'hero',
-
     }
   }
 
@@ -122,28 +97,21 @@ class App extends Component {
       return;
     }
 
-    // 根据索引从玩家手上的牌组中移除这张牌
-    const { playerCards, usedCards } = this.state;
-    const currentCard = playerCards[index]; 
-    const leftCards = playerCards.filter(card => card.id !== id);
-    const newUserdCards = [...usedCards, currentCard];
+    const { decks } = this.props;
 
-    this.setState({
-      playerCards: leftCards,
-      usedCards: newUserdCards,
-    });
-
+    // 根据id从玩家手上的牌组中移除这张牌
+    const currentCard = decks.heroDeck[index];
+    decks.removeHeroCard(id, index);
     this.calculateCardEffect(currentCard);
-
   }
 
   calculateCardEffect = (currentCard) => {
+    const { hero, boss } = this.props;
+
     // 出牌效果
     let effectName;
     let effectValue = 0;
     let effect = null;
-
-    // const { currentTurn } = this.state;
 
     if (currentCard.name === '攻击') {
       effectName = '生命值';
@@ -195,29 +163,27 @@ class App extends Component {
   }
 
   nextTurn = () => {
-    this.setState({
-      currentTurn: 'boss'
-    });
-
+    this.setState({ currentTurn: 'boss' });
     this.bossStartAction();
   }
 
   bossStartAction() {
     // boss 依次发牌
+    const { decks: { bossDeck } } = this.props;
 
-    this.state.enemyCards.forEach((card, index) => {
+    bossDeck.forEach((card, index) => {
       setTimeout(() => this.calculateCardEffect(card), index * 2000);
     })
 
     setTimeout(() => {
       this.setState({ currentTurn: 'hero' })
-    }, this.state.enemyCards.length * 2000)
+    }, bossDeck.length * 2000)
   }
 
-
-
   render() {
-    const { playerCards, usedCards, effects, status } = this.state;
+    const { effects, status } = this.state;
+    const { hero, boss, decks } = this.props;
+    const { usedCards } = decks;
 
     return (
       <Wrapper className="App">
@@ -230,7 +196,6 @@ class App extends Component {
             life={boss.life}
             armor={boss.armor}
           />
-
         </EnemyArea>
 
         <Dustbin>
@@ -251,25 +216,25 @@ class App extends Component {
         </Dustbin>
 
         <PlayerCardsArea>
-          <Hero 
+          <Hero
             life={hero.life}
             armor={hero.armor}
             maxLife={hero.maxLife}
             className="person"
           />
-        {
-          playerCards.map((card, index) => {
-            return <Card
-              name={card.name}
-              desc={card.desc}
-              attack={card.attack}
-              armor={card.armor}
-              playCard={() => this.playCard(card.id, index)}
+          {
+            decks.heroDeck.map((card, index) => {
+              return <Card
+                name={card.name}
+                desc={card.desc}
+                attack={card.attack}
+                armor={card.armor}
+                playCard={() => this.playCard(card.id, index)}
 
-              key={Math.random()}
-            ></Card>
-          })
-        }
+                key={Math.random()}
+              ></Card>
+            })
+          }
 
           {this.state.currentTurn === 'hero'
             && <button onClick={this.nextTurn}>下一回合</button>}
@@ -280,6 +245,8 @@ class App extends Component {
             name={e.name}
             value={e.value}
             target={e.target}
+
+            key={Math.random()}
           />
         })}
 
