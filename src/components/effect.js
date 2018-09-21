@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Wrapper = styled.div`
   width: 100px;
@@ -52,6 +53,11 @@ class Effect extends Component {
       </Wrapper>
     )
   }
+}
+
+Effect.propTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
 }
 
 export default Effect;

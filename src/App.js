@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { observer } from 'mobx-react';
+import { observer, PropTypes } from 'mobx-react';
 
 import Card from './components/card';
 import Hero from './components/hero';
@@ -256,5 +256,12 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  hero: PropTypes.observableObject.isRequired,
+  boss: PropTypes.observableObject.isRequired,
+  decks: PropTypes.observableObject.isRequired,
+}
+
 
 export default App;

@@ -26,8 +26,9 @@ class Person extends Component {
 
     return (
       <Wrapper className={this.props.className}>
-        <p className="avatar">
-          <span>🐒</span>
+        <p className="avatar">{
+        // eslint-disable-next-line
+        }<span>🐒</span>
         </p>
         <p>生命值：{`${life} / ${maxLife}`}</p>
         <p>护甲：{`${armor|| 0}`}</p>

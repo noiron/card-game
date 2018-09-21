@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 
 const Wrapper = styled.div`
@@ -27,15 +28,10 @@ const Wrapper = styled.div`
 `;
 
 class Card extends Component {
-  // constructor() {
-  //   super();
-  // }
 
   handleDoubleClick = () => {
-    console.log('双击卡牌');
     this.props.playCard();
   }
-
 
   render() {
     const { name, desc, attack, armor } = this.props;
@@ -50,5 +46,13 @@ class Card extends Component {
     )
   }
 }
+
+Card.propTypes = {
+  name: PropTypes.string.isRequired,
+  desc: PropTypes.string.isRequired,
+  attack: PropTypes.number,
+  armor: PropTypes.number,
+}
+
 
 export default Card;

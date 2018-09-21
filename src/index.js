@@ -16,7 +16,6 @@ ReactDOM.render(
     hero={hero}
     boss={boss}
     decks={decks}
-    usedCards={decks.usedCards}
   />,
   document.getElementById('root')
 );

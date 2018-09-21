@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -33,6 +34,10 @@ class GameOver extends Component {
       </Wrapper>
     )
   }
+}
+
+GameOver.propTypes = {
+  title: PropTypes.string.isRequired,
 }
 
 export default GameOver;
