@@ -4,7 +4,7 @@
 import { observable, computed } from 'mobx';
 import { game_turn, run_status } from '../constants';
 
-class GameStatus {
+class GameState {
   @observable currentTurn;
   @observable runStatus;
 
@@ -20,8 +20,8 @@ class GameStatus {
   }
 }
 
-const gameStatus = new GameStatus({
+const gameState = new GameState({
   currentTurn: game_turn.hero
 });
 
-export default gameStatus;
+export default gameState;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { observer, PropTypes } from 'mobx-react';
+import { observer, PropTypes as MobxPropTypes } from 'mobx-react';
 
 import Card from './components/card';
 import Hero from './components/hero';
@@ -97,9 +97,9 @@ class App extends Component {
 
   // 玩家出牌
   playCard = (id, index) => {
-    const { gameStatus } = this.props;
+    const { gameState } = this.props;
     
-    if (gameStatus.currentTurn !== game_turn.hero) {
+    if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
 
@@ -112,7 +112,7 @@ class App extends Component {
   }
 
   calculateCardEffect = (currentCard) => {
-    const { hero, boss, gameStatus } = this.props;
+    const { hero, boss, gameState } = this.props;
 
     // 出牌效果
     let effectName;
@@ -136,9 +136,9 @@ class App extends Component {
       }
 
       if (boss.life <= 0) {
-        gameStatus.runStatus = run_status.win;
+        gameState.runStatus = run_status.win;
       } else if (hero.life <= 0) {
-        gameStatus.runStatus = run_status.lose;
+        gameState.runStatus = run_status.lose;
       }
 
     } else if (currentCard.name === '防御') {
@@ -171,32 +171,32 @@ class App extends Component {
   }
 
   nextTurn = () => {
-    const { gameStatus } = this.props;
-    gameStatus.currentTurn = game_turn.monster;
+    const { gameState } = this.props;
+    gameState.currentTurn = game_turn.monster;
     this.bossStartAction();
   }
 
   bossStartAction() {
     // boss 依次发牌
-    const { decks, gameStatus } = this.props;
+    const { decks, gameState } = this.props;
     const { bossDeck } = decks;
 
     bossDeck.forEach((card, index) => {
       setTimeout(() => {
-        if (gameStatus.isGameOver) return;
+        if (gameState.isGameOver) return;
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id, index);
       }, index * 2000);
     })
 
     setTimeout(() => {
-      if (gameStatus.isGameOver) return;
-      gameStatus.currentTurn = game_turn.hero;
+      if (gameState.isGameOver) return;
+      gameState.currentTurn = game_turn.hero;
     }, bossDeck.length * 2000)
   }
 
   showRunStatus() {
-    const { runStatus, isGameOver } = this.props.gameStatus;
+    const { runStatus, isGameOver } = this.props.gameState;
 
     if (runStatus === run_status.running) return null;
 
@@ -209,12 +209,12 @@ class App extends Component {
 
   render() {
     const { effects } = this.state;
-    const { hero, boss, decks, gameStatus } = this.props;
+    const { hero, boss, decks, gameState } = this.props;
     const { usedCards } = decks;
 
     return (
       <Wrapper className="App">
-        {gameStatus.currentTurn === game_turn.hero
+        {gameState.currentTurn === game_turn.hero
           ? <TurnFlag>你的回合</TurnFlag>
           : <TurnFlag>对手的回合</TurnFlag>
         }
@@ -265,7 +265,7 @@ class App extends Component {
             })
           }
 
-          {gameStatus.currentTurn === game_turn.hero
+          {gameState.currentTurn === game_turn.hero
             && <button onClick={this.nextTurn}>下一回合</button>}
         </PlayerCardsArea>
 
@@ -287,9 +287,10 @@ class App extends Component {
 }
 
 App.propTypes = {
-  hero: PropTypes.observableObject.isRequired,
-  boss: PropTypes.observableObject.isRequired,
-  decks: PropTypes.observableObject.isRequired,
+  hero: MobxPropTypes.observableObject.isRequired,
+  boss: MobxPropTypes.observableObject.isRequired,
+  decks: MobxPropTypes.observableObject.isRequired,
+  gameState: MobxPropTypes.observableObject.isRequired,
 }
 
 
