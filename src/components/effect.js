@@ -53,8 +53,14 @@ class Effect extends Component {
 
 Effect.propTypes = {
   name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  target: card_target.hero | card_target.monster,
+  value: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]).isRequired,
+  target: PropTypes.oneOf([
+    card_target.hero,
+    card_target.monster
+  ]),
 }
 
 export default Effect;

@@ -9,7 +9,7 @@ import Effect from './components/effect';
 import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
 
-import { card_target } from './constants';
+import { card_target, game_turn } from './constants';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -92,15 +92,15 @@ class App extends Component {
     this.state = {
       effects: [],
       status: '',
-      currentTurn: 'hero',
     }
   }
 
 
   // 玩家出牌
   playCard = (id, index) => {
+    const { gameStatus } = this.props;
     
-    if (this.state.currentTurn !== 'hero') {
+    if (gameStatus.currentTurn !== game_turn.hero) {
       return;
     }
 
@@ -170,13 +170,14 @@ class App extends Component {
   }
 
   nextTurn = () => {
-    this.setState({ currentTurn: 'boss' });
+    const { gameStatus } = this.props;
+    gameStatus.currentTurn = game_turn.monster;
     this.bossStartAction();
   }
 
   bossStartAction() {
     // boss 依次发牌
-    const { decks } = this.props;
+    const { decks, gameStatus } = this.props;
     const { bossDeck } = decks;
 
     bossDeck.forEach((card, index) => {
@@ -187,18 +188,18 @@ class App extends Component {
     })
 
     setTimeout(() => {
-      this.setState({ currentTurn: 'hero' })
+      gameStatus.currentTurn = game_turn.hero;
     }, bossDeck.length * 2000)
   }
 
   render() {
     const { effects, status } = this.state;
-    const { hero, boss, decks } = this.props;
+    const { hero, boss, decks, gameStatus } = this.props;
     const { usedCards } = decks;
 
     return (
       <Wrapper className="App">
-        {this.state.currentTurn === 'hero'
+        {gameStatus.currentTurn === game_turn.hero
           ? <TurnFlag>你的回合</TurnFlag>
           : <TurnFlag>对手的回合</TurnFlag>
         }
@@ -249,7 +250,7 @@ class App extends Component {
             })
           }
 
-          {this.state.currentTurn === 'hero'
+          {gameStatus.currentTurn === game_turn.hero
             && <button onClick={this.nextTurn}>下一回合</button>}
         </PlayerCardsArea>
 
