@@ -9,7 +9,7 @@ import Effect from './components/effect';
 import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
 
-import { card_target, game_turn } from './constants';
+import { card_target, game_turn, run_status } from './constants';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -91,7 +91,6 @@ class App extends Component {
 
     this.state = {
       effects: [],
-      status: '',
     }
   }
 
@@ -113,7 +112,7 @@ class App extends Component {
   }
 
   calculateCardEffect = (currentCard) => {
-    const { hero, boss } = this.props;
+    const { hero, boss, gameStatus } = this.props;
 
     // 出牌效果
     let effectName;
@@ -137,7 +136,9 @@ class App extends Component {
       }
 
       if (boss.life <= 0) {
-        this.setState({ status: 'over' });
+        gameStatus.runStatus = run_status.win;
+      } else if (hero.life <= 0) {
+        gameStatus.runStatus = run_status.lose;
       }
 
     } else if (currentCard.name === '防御') {
@@ -182,18 +183,32 @@ class App extends Component {
 
     bossDeck.forEach((card, index) => {
       setTimeout(() => {
+        if (gameStatus.isGameOver) return;
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id, index);
       }, index * 2000);
     })
 
     setTimeout(() => {
+      if (gameStatus.isGameOver) return;
       gameStatus.currentTurn = game_turn.hero;
     }, bossDeck.length * 2000)
   }
 
+  showRunStatus() {
+    const { runStatus, isGameOver } = this.props.gameStatus;
+
+    if (runStatus === run_status.running) return null;
+
+    if (isGameOver) {
+      return <GameOver status={runStatus} />
+    }
+
+    return null;
+  }
+
   render() {
-    const { effects, status } = this.state;
+    const { effects } = this.state;
     const { hero, boss, decks, gameStatus } = this.props;
     const { usedCards } = decks;
 
@@ -265,7 +280,7 @@ class App extends Component {
         })}
 
 
-        {status === 'over' && <GameOver />}
+        {this.showRunStatus()}
       </Wrapper>
     );
   }

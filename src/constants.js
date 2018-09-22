@@ -13,3 +13,9 @@ export const card_source = {
   hero: 'hero',
   monster: 'monster',
 }
+
+export const run_status = {
+  running: 'running',
+  win: 'win',
+  lose: 'lose',
+}
