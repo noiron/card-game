@@ -86,13 +86,9 @@ const Dustbin = styled.div`
 
 @observer
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      effects: [],
-    }
-  }
+  // constructor() {
+  //   super();
+  // }
 
 
   // 玩家出牌
@@ -159,13 +155,13 @@ class App extends Component {
     }
 
     if (effect) {
-      const newEffects = [...this.state.effects, effect];
-      this.setState({ effects: newEffects });
+      gameState.effects.push(effect);
+
+      // TODO: 同时有两个 effect 时的处理
 
       // 等待后删除
       setTimeout(() => {
-        newEffects.splice(newEffects.length - 2);
-        this.setState({ effects: newEffects });
+        gameState.effects.splice(gameState.effects.length - 2);
       }, 1500);
     }
   }
@@ -208,7 +204,6 @@ class App extends Component {
   }
 
   render() {
-    const { effects } = this.state;
     const { hero, boss, decks, gameState } = this.props;
     const { usedCards } = decks;
 
@@ -269,7 +264,7 @@ class App extends Component {
             && <button onClick={this.nextTurn}>下一回合</button>}
         </PlayerCardsArea>
 
-        {effects.map(e => {
+        {gameState.effects.map(e => {
           return <Effect
             name={e.name}
             value={e.value}

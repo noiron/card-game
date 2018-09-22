@@ -7,6 +7,7 @@ import { game_turn, run_status } from '../constants';
 class GameState {
   @observable currentTurn;
   @observable runStatus;
+  @observable effects;
 
   @computed get isGameOver() {
     return this.runStatus === run_status.win 
@@ -17,6 +18,7 @@ class GameState {
   constructor(info) {
     this.currentTurn = info.currentTurn;
     this.runStatus = run_status.running;
+    this.effects = [];
   }
 }
 
