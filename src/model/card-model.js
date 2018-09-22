@@ -7,10 +7,7 @@ class CardModel {
     this.armor = info.armor;
     this.positive = info.positive;
     this.target = info.target;
-
-    // 卡牌的来源和使用目标
-    this.sourcePerson = null;
-    this.targetPerson = null;
+    this.source = info.source;
   }
 
 

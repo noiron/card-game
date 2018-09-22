@@ -8,3 +8,8 @@ export const card_target = {
   player: 'player',
   enemy: 'enemy',
 }
+
+export const card_source = {
+  hero: 'hero',
+  monster: 'monster',
+}

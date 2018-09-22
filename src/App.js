@@ -65,15 +65,22 @@ const Dustbin = styled.div`
   width: 100%;
   height: 200px;
   box-sizing: border-box;
-  display: flex;
+  display: -webkit-box;
+  display: box;
   justify-content: center;
   align-items: center;
   border: 2px solid lightblue;
   margin: 10px 0;
   border-radius: 10px;
+  overflow-x: scroll;
 
   .card {
     margin-right: 20px;
+    flex: 0 0 90px;
+  }
+
+  .card.monster {
+    border-color: red;
   }
 `;
 
@@ -169,10 +176,14 @@ class App extends Component {
 
   bossStartAction() {
     // boss 依次发牌
-    const { decks: { bossDeck } } = this.props;
+    const { decks } = this.props;
+    const { bossDeck } = decks;
 
     bossDeck.forEach((card, index) => {
-      setTimeout(() => this.calculateCardEffect(card), index * 2000);
+      setTimeout(() => {
+        this.calculateCardEffect(card);
+        decks.removeBossCard(card.id, index);
+      }, index * 2000);
     })
 
     setTimeout(() => {
@@ -207,6 +218,7 @@ class App extends Component {
               attack={card.attack}
               armor={card.armor}
               index={index}
+              source={card.source}
               playCard={() => {}}
 
               key={Math.random()}
@@ -229,6 +241,7 @@ class App extends Component {
                 desc={card.desc}
                 attack={card.attack}
                 armor={card.armor}
+                source={card.source}
                 playCard={() => this.playCard(card.id, index)}
 
                 key={Math.random()}

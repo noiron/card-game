@@ -1,7 +1,7 @@
 import CardModel from "../model/card-model";
 import * as seeds from './seeds';
 import * as utils from '../utils';
-import { card_target } from '../constants';
+import { card_target, card_source } from '../constants';
 import { observable, action } from 'mobx';
 
 
@@ -20,6 +20,7 @@ class Decks {
         ...seed,
         id: utils.uuid(),
         target,
+        source: card_source.hero,
       });
       this.heroDeck.push(card);
     });
@@ -31,6 +32,7 @@ class Decks {
         ...seed,
         id: utils.uuid(),
         target,
+        source: card_source.monster,
       });
       this.bossDeck.push(card);
     });
@@ -40,6 +42,12 @@ class Decks {
   removeHeroCard(id, index) {
     this.usedCards.push(this.heroDeck[index]);
     this.heroDeck = this.heroDeck.filter(card => card.id !== id);
+  }
+
+  @action
+  removeBossCard(id, index) {
+    this.usedCards.push(this.bossDeck[index]);
+
   }
 
 }

@@ -24,5 +24,5 @@ const seed2 = {
 };
 
 
-export const heroSeeds = [seed0, seed1, seed2];
-export const bossSeeds = [seed0, seed1];
+export const heroSeeds = [seed0, seed1, seed2, seed0];
+export const bossSeeds = [seed0, seed1, seed1];

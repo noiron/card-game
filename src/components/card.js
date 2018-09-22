@@ -34,10 +34,10 @@ class Card extends Component {
   }
 
   render() {
-    const { name, desc, attack, armor } = this.props;
+    const { name, desc, attack, armor, source } = this.props;
 
     return (
-      <Wrapper className="card" onDoubleClick={this.handleDoubleClick}>
+      <Wrapper className={"card " + source} onDoubleClick={this.handleDoubleClick}>
         <p className="name">{name}</p>
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack > 0 && <p>攻击：{attack}</p>}
