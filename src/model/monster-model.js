@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-class Boss {
+class Monster {
   @observable life;
   @observable armor;
 
@@ -26,4 +26,4 @@ class Boss {
 
 }
 
-export default Boss;
+export default Monster;

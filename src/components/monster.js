@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 
 const Wrapper = styled.div`
   width: 100px;
@@ -19,7 +20,7 @@ const Wrapper = styled.div`
   }
 `;
 
-class Boss extends Component {
+class Monster extends Component {
 
   render() {
     const { life, armor } = this.props;
@@ -37,4 +38,11 @@ class Boss extends Component {
   }
 }
 
-export default Boss;
+Monster.propTypes = {
+  life: PropTypes.number.isRequired,
+  armor: PropTypes.number.isRequired,
+}
+
+
+
+export default Monster;

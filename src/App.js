@@ -4,7 +4,7 @@ import { observer, PropTypes } from 'mobx-react';
 
 import Card from './components/card';
 import Hero from './components/hero';
-import Boss from './components/boss';
+import Monster from './components/monster';
 import Effect from './components/effect';
 import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
@@ -130,7 +130,7 @@ class App extends Component {
         target: currentCard.target,
       });
 
-      if (currentCard.target === card_target.enemy) {
+      if (currentCard.target === card_target.monster) {
         boss.receiveAttack(currentCard.attack);
       } else {
         hero.receiveAttack(currentCard.attack);
@@ -150,7 +150,7 @@ class App extends Component {
         target: currentCard.target,
       });
 
-      if (currentCard.target === card_target.player) {
+      if (currentCard.target === card_target.hero) {
         hero.addArmor(effectValue);
       } else {
         boss.addArmor(effectValue);
@@ -203,7 +203,7 @@ class App extends Component {
           : <TurnFlag>对手的回合</TurnFlag>
         }
         <EnemyArea>
-          <Boss 
+          <Monster 
             life={boss.life}
             armor={boss.armor}
           />

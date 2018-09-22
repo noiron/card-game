@@ -1,12 +1,12 @@
 // 当前属于谁的回合
 export const game_turn = {
   hero: 'hero',
-  boss: 'boss',
+  monster: 'monster',
 }
 
 export const card_target = {
-  player: 'player',
-  enemy: 'enemy',
+  hero: 'hero',
+  monster: 'monster',
 }
 
 export const card_source = {

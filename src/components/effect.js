@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { card_target } from '../constants';
 
 const Wrapper = styled.div`
   width: 100px;
@@ -12,12 +13,12 @@ const Wrapper = styled.div`
   color: red;
   z-index: 10;
 
-  &.target-enemy {
+  &.target-monster {
     right: 50px;
     top: 20px;
   }
 
-  &.target-player {
+  &.target-hero {
     right: 50px;
     bottom: 35px;
   }
@@ -39,12 +40,7 @@ class Effect extends Component {
   render() {
     const { name, value, target } = this.props;
 
-    let classes = '';
-    if (target === 'enemy') {
-      classes += 'target-enemy';
-    } else if (target === 'player') {
-      classes += 'target-player';
-    }
+    const classes = 'target-' + target;
     
     return (
       <Wrapper className={classes}>
@@ -58,6 +54,7 @@ class Effect extends Component {
 Effect.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
+  target: card_target.hero | card_target.monster,
 }
 
 export default Effect;

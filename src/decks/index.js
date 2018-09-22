@@ -14,7 +14,7 @@ class Decks {
   constructor() {
     seeds.heroSeeds.forEach(seed => {
       // 区分正面效果和负面效果牌
-      const target = seed.positive ? card_target.player : card_target.enemy;
+      const target = seed.positive ? card_target.hero : card_target.monster;
     
       const card = new CardModel({
         ...seed,
@@ -25,8 +25,8 @@ class Decks {
       this.heroDeck.push(card);
     });
 
-    seeds.bossSeeds.forEach(seed => {
-      const target = seed.positive ? card_target.enemy : card_target.player;
+    seeds.monsterSeeds.forEach(seed => {
+      const target = seed.positive ? card_target.monster : card_target.hero;
 
       const card = new CardModel({
         ...seed,
