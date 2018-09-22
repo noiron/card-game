@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 
 const Wrapper = styled.div`
   width: 100px;
@@ -19,15 +20,16 @@ const Wrapper = styled.div`
   }
 `;
 
-class Boss extends Component {
+class Monster extends Component {
 
   render() {
     const { life, armor } = this.props;
 
     return (
       <Wrapper className={this.props.className}>
-        <p className="avatar">
-          <span>👹</span>
+        <p className="avatar">{
+          // eslint-disable-next-line
+          }<span>👹</span>
         </p>
         <p>生命值：{`${life}`}</p>
         <p>护甲：{`${armor|| 0}`}</p>
@@ -36,4 +38,11 @@ class Boss extends Component {
   }
 }
 
-export default Boss;
+Monster.propTypes = {
+  life: PropTypes.number.isRequired,
+  armor: PropTypes.number.isRequired,
+}
+
+
+
+export default Monster;

@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { observer, PropTypes as MobxPropTypes } from 'mobx-react';
+
 import Card from './components/card';
 import Hero from './components/hero';
-import Boss from './components/boss';
+import Monster from './components/monster';
 import Effect from './components/effect';
-// import CardModel from './model/card-model';
-import HeroModel from './model/hero-model';
-import BossModel from './model/boss-model';
-import EffectModel from './model/effect-model';
 import GameOver from './components/game-over';
+import EffectModel from './model/effect-model';
 
-import hero_deck from './decks/hero-deck';
-import boss_deck from './decks/boss-deck';
-
-import { card_target } from './constants';
+import { card_target, game_turn, run_status } from './constants';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -69,81 +65,55 @@ const Dustbin = styled.div`
   width: 100%;
   height: 200px;
   box-sizing: border-box;
-  display: flex;
+  display: -webkit-box;
+  display: box;
   justify-content: center;
   align-items: center;
   border: 2px solid lightblue;
   margin: 10px 0;
   border-radius: 10px;
+  overflow-x: scroll;
 
   .card {
     margin-right: 20px;
+    flex: 0 0 90px;
+  }
+
+  .card.monster {
+    border-color: red;
   }
 `;
 
-
-const hero = new HeroModel({
-  life: 20,
-  armor: 0
-});
-
-const boss = new BossModel({
-  life: 50,
-  armor: 0
-});
-
+@observer
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-
-      // 玩家的牌组
-      playerCards: [...hero_deck],
-
-      // 敌人牌组
-      enemyCards: [...boss_deck],
-
-      // 使用过的牌
-      usedCards: [hero_deck[0]],
-
-      effects: [],
-      status: '',
-      currentTurn: 'hero',
-
-    }
-  }
+  // constructor() {
+  //   super();
+  // }
 
 
   // 玩家出牌
   playCard = (id, index) => {
+    const { gameState } = this.props;
     
-    if (this.state.currentTurn !== 'hero') {
+    if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
 
-    // 根据索引从玩家手上的牌组中移除这张牌
-    const { playerCards, usedCards } = this.state;
-    const currentCard = playerCards[index]; 
-    const leftCards = playerCards.filter(card => card.id !== id);
-    const newUserdCards = [...usedCards, currentCard];
+    const { decks } = this.props;
 
-    this.setState({
-      playerCards: leftCards,
-      usedCards: newUserdCards,
-    });
-
+    // 根据id从玩家手上的牌组中移除这张牌
+    const currentCard = decks.heroDeck[index];
+    decks.removeHeroCard(id, index);
     this.calculateCardEffect(currentCard);
-
   }
 
   calculateCardEffect = (currentCard) => {
+    const { hero, boss, gameState } = this.props;
+
     // 出牌效果
     let effectName;
     let effectValue = 0;
     let effect = null;
-
-    // const { currentTurn } = this.state;
 
     if (currentCard.name === '攻击') {
       effectName = '生命值';
@@ -155,14 +125,16 @@ class App extends Component {
         target: currentCard.target,
       });
 
-      if (currentCard.target === card_target.enemy) {
+      if (currentCard.target === card_target.monster) {
         boss.receiveAttack(currentCard.attack);
       } else {
         hero.receiveAttack(currentCard.attack);
       }
 
       if (boss.life <= 0) {
-        this.setState({ status: 'over' });
+        gameState.runStatus = run_status.win;
+      } else if (hero.life <= 0) {
+        gameState.runStatus = run_status.lose;
       }
 
     } else if (currentCard.name === '防御') {
@@ -175,7 +147,7 @@ class App extends Component {
         target: currentCard.target,
       });
 
-      if (currentCard.target === card_target.player) {
+      if (currentCard.target === card_target.hero) {
         hero.addArmor(effectValue);
       } else {
         boss.addArmor(effectValue);
@@ -183,54 +155,69 @@ class App extends Component {
     }
 
     if (effect) {
-      const newEffects = [...this.state.effects, effect];
-      this.setState({ effects: newEffects });
+      gameState.effects.push(effect);
+
+      // TODO: 同时有两个 effect 时的处理
 
       // 等待后删除
       setTimeout(() => {
-        newEffects.splice(newEffects.length - 2);
-        this.setState({ effects: newEffects });
+        gameState.effects.splice(gameState.effects.length - 2);
       }, 1500);
     }
   }
 
   nextTurn = () => {
-    this.setState({
-      currentTurn: 'boss'
-    });
-
+    const { gameState } = this.props;
+    gameState.currentTurn = game_turn.monster;
     this.bossStartAction();
   }
 
   bossStartAction() {
     // boss 依次发牌
+    const { decks, gameState } = this.props;
+    const { bossDeck } = decks;
 
-    this.state.enemyCards.forEach((card, index) => {
-      setTimeout(() => this.calculateCardEffect(card), index * 2000);
+    bossDeck.forEach((card, index) => {
+      setTimeout(() => {
+        if (gameState.isGameOver) return;
+        this.calculateCardEffect(card);
+        decks.removeBossCard(card.id, index);
+      }, index * 2000);
     })
 
     setTimeout(() => {
-      this.setState({ currentTurn: 'hero' })
-    }, this.state.enemyCards.length * 2000)
+      if (gameState.isGameOver) return;
+      gameState.currentTurn = game_turn.hero;
+    }, bossDeck.length * 2000)
   }
 
+  showRunStatus() {
+    const { runStatus, isGameOver } = this.props.gameState;
 
+    if (runStatus === run_status.running) return null;
+
+    if (isGameOver) {
+      return <GameOver status={runStatus} />
+    }
+
+    return null;
+  }
 
   render() {
-    const { playerCards, usedCards, effects, status } = this.state;
+    const { hero, boss, decks, gameState } = this.props;
+    const { usedCards } = decks;
 
     return (
       <Wrapper className="App">
-        {this.state.currentTurn === 'hero'
+        {gameState.currentTurn === game_turn.hero
           ? <TurnFlag>你的回合</TurnFlag>
           : <TurnFlag>对手的回合</TurnFlag>
         }
         <EnemyArea>
-          <Boss 
+          <Monster 
             life={boss.life}
             armor={boss.armor}
           />
-
         </EnemyArea>
 
         <Dustbin>
@@ -242,6 +229,7 @@ class App extends Component {
               attack={card.attack}
               armor={card.armor}
               index={index}
+              source={card.source}
               playCard={() => {}}
 
               key={Math.random()}
@@ -251,43 +239,54 @@ class App extends Component {
         </Dustbin>
 
         <PlayerCardsArea>
-          <Hero 
+          <Hero
             life={hero.life}
             armor={hero.armor}
             maxLife={hero.maxLife}
             className="person"
           />
-        {
-          playerCards.map((card, index) => {
-            return <Card
-              name={card.name}
-              desc={card.desc}
-              attack={card.attack}
-              armor={card.armor}
-              playCard={() => this.playCard(card.id, index)}
+          {
+            decks.heroDeck.map((card, index) => {
+              return <Card
+                name={card.name}
+                desc={card.desc}
+                attack={card.attack}
+                armor={card.armor}
+                source={card.source}
+                playCard={() => this.playCard(card.id, index)}
 
-              key={Math.random()}
-            ></Card>
-          })
-        }
+                key={Math.random()}
+              ></Card>
+            })
+          }
 
-          {this.state.currentTurn === 'hero'
+          {gameState.currentTurn === game_turn.hero
             && <button onClick={this.nextTurn}>下一回合</button>}
         </PlayerCardsArea>
 
-        {effects.map(e => {
+        {gameState.effects.map(e => {
           return <Effect
             name={e.name}
             value={e.value}
             target={e.target}
+
+            key={Math.random()}
           />
         })}
 
 
-        {status === 'over' && <GameOver />}
+        {this.showRunStatus()}
       </Wrapper>
     );
   }
 }
+
+App.propTypes = {
+  hero: MobxPropTypes.observableObject.isRequired,
+  boss: MobxPropTypes.observableObject.isRequired,
+  decks: MobxPropTypes.observableObject.isRequired,
+  gameState: MobxPropTypes.observableObject.isRequired,
+}
+
 
 export default App;

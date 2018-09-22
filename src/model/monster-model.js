@@ -1,4 +1,9 @@
-class Boss {
+import { observable } from 'mobx';
+
+class Monster {
+  @observable life;
+  @observable armor;
+
   constructor(info) {
     this.life = info.life;
     this.armor = info.armor;
@@ -21,4 +26,4 @@ class Boss {
 
 }
 
-export default Boss;
+export default Monster;

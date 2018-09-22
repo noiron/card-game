@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { run_status } from '../constants';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -19,11 +21,8 @@ class GameOver extends Component {
 
   render() {
 
-    const { 
-      title = '游戏结束',
-      // content = '大侠请交钱再来'
-    } = this.props;
-
+    const { status } = this.props;
+    const title = status === run_status.win ? '你赢了' : '你输了';
 
     return (
       <Wrapper>
@@ -33,6 +32,14 @@ class GameOver extends Component {
       </Wrapper>
     )
   }
+}
+
+GameOver.propTypes = {
+  title: PropTypes.string,
+  status: PropTypes.oneOf([
+    run_status.win,
+    run_status.lose
+  ]).isRequired,
 }
 
 export default GameOver;
