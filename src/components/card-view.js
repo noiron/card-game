@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     }
 `;
 
-class Card extends Component {
+class CardView extends Component {
 
   handleDoubleClick = () => {
     this.props.playCard();
@@ -46,12 +46,11 @@ class Card extends Component {
   }
 }
 
-Card.propTypes = {
+CardView.propTypes = {
   name: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
   attack: PropTypes.number,
   armor: PropTypes.number,
 }
 
-
-export default Card;
+export default CardView;

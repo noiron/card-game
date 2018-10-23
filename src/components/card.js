@@ -1,34 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
 import { item_types } from '../constants';
-
-
-const Wrapper = styled.div`
-  width: 90px;
-  height: 120px;
-  border: 2px solid #000;
-  text-align: center;
-  font-size: 14px;
-  user-select: none;
-  border-radius: 8px;
-  /* cursor: pointer; */
-
-  p {
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
-  .name {
-    font-size: 20px;
-    margin-bottom: 10%;
-  }
-
-  .desc.emoji {
-      font-size: 36px;
-    }
-`;
+import CardView from './card-view';
 
 const cardSource = {
   beginDrag(props) {
@@ -52,16 +26,11 @@ class Card extends Component {
   }
 
   render() {
-    const { name, desc, attack, armor, source, connectDragSource } = this.props;
+    const { connectDragSource, ...cardProps } = this.props;
 
     return (
       connectDragSource && connectDragSource(<div>
-      <Wrapper className={"card " + source} onDoubleClick={this.handleDoubleClick}>
-        <p className="name">{name}</p>
-        <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
-        {attack > 0 && <p>攻击：{attack}</p>}
-        {armor >0  && <p>护甲：{armor}</p>}
-      </Wrapper>
+        <CardView {...cardProps} />
       </div>
       )
     )
@@ -74,6 +43,5 @@ Card.propTypes = {
   attack: PropTypes.number,
   armor: PropTypes.number,
 }
-
 
 export default Card;
