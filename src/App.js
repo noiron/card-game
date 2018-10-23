@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { observer, PropTypes as MobxPropTypes } from 'mobx-react';
 
 import Card from './components/card';
+import CardView from './components/card-view';
 import Hero from './components/hero';
 import Monster from './components/monster';
 import Effect from './components/effect';
 import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
+import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
 
@@ -210,30 +212,33 @@ class App extends Component {
           第{gameState.turnCount}回合{'  '}  
           {gameState.currentTurn === game_turn.hero ? '你的' : '对手的'}回合
         </TurnFlag>
-        <EnemyArea>
-          <Monster 
-            life={boss.life}
-            armor={boss.armor}
-          />
-        </EnemyArea>
 
-        <Dustbin>
-        {
-          usedCards.map((card, index) => {
-            return <Card
-              name={card.name}
-              desc={card.desc}
-              attack={card.attack}
-              armor={card.armor}
-              index={index}
-              source={card.source}
-              playCard={() => {}}
+        <DropArea>
+          <EnemyArea>
+            <Monster
+              life={boss.life}
+              armor={boss.armor}
+            />
+          </EnemyArea>
 
-              key={Math.random()}
-            ></Card>
-          })
-        }
-        </Dustbin>
+          <Dustbin>
+            {
+              usedCards.map((card, index) => {
+                return <CardView
+                  name={card.name}
+                  desc={card.desc}
+                  attack={card.attack}
+                  armor={card.armor}
+                  index={index}
+                  source={card.source}
+                  playCard={() => { }}
+
+                  key={Math.random()}
+                ></CardView>
+              })
+            }
+          </Dustbin>
+        </DropArea>
 
         <PlayerCardsArea>
           <Hero
