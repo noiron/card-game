@@ -9,7 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 import decks from './decks';
 import gameState from './model/game-state-model';
 
-const hero = new HeroModel({ life: 20, armor: 0 });
+const hero = new HeroModel({ life: 50, armor: 0 });
 const boss = new MonsterModel({ life: 50, armor: 0 });
 
 ReactDOM.render(

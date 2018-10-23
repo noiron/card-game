@@ -27,6 +27,7 @@ const TurnFlag = styled.div`
   left: 50%;
   transform: translate(-50%);
   color: green;
+  white-space: pre;
 `;
 
 const EnemyArea = styled.div`
@@ -86,10 +87,6 @@ const Dustbin = styled.div`
 
 @observer
 class App extends Component {
-  // constructor() {
-  //   super();
-  // }
-
 
   // 玩家出牌
   playCard = (id, index) => {
@@ -182,13 +179,13 @@ class App extends Component {
         if (gameState.isGameOver) return;
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id, index);
-      }, index * 2000);
+        if (index >= bossDeck.length - 1) {
+          decks.monsterTurnOver = true;
+        }
+
+      }, index * 1000);
     })
 
-    setTimeout(() => {
-      if (gameState.isGameOver) return;
-      gameState.currentTurn = game_turn.hero;
-    }, bossDeck.length * 2000)
   }
 
   showRunStatus() {
@@ -209,10 +206,10 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
-        {gameState.currentTurn === game_turn.hero
-          ? <TurnFlag>你的回合</TurnFlag>
-          : <TurnFlag>对手的回合</TurnFlag>
-        }
+        <TurnFlag>
+          第{gameState.turnCount}回合{'  '}  
+          {gameState.currentTurn === game_turn.hero ? '你的' : '对手的'}回合
+        </TurnFlag>
         <EnemyArea>
           <Monster 
             life={boss.life}

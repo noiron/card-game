@@ -1,15 +1,18 @@
 import CardModel from "../model/card-model";
 import * as seeds from './seeds';
 import * as utils from '../utils';
-import { card_target, card_source } from '../constants';
-import { observable, action } from 'mobx';
+import { card_target, card_source, game_turn } from '../constants';
+import { observable, action, reaction } from 'mobx';
+import gameState from '../model/game-state-model';
 
 
 class Decks {
   @observable heroDeck = [];
   @observable bossDeck = [];
   @observable usedCards = [];
-
+  
+  @observable monsterUsedCardsCount = 0;
+  @observable monsterTurnOver = false;
 
   constructor() {
     seeds.heroSeeds.forEach(seed => {
@@ -47,10 +50,22 @@ class Decks {
   @action
   removeBossCard(id, index) {
     this.usedCards.push(this.bossDeck[index]);
-
   }
 
 }
 
 const decks = new Decks();
+
+// reaction 监听对手回合是否已结束，就 delay 后切换到玩家回合
+reaction(
+  () => decks.monsterTurnOver,
+  (isOver, reaction)  => {
+    if (isOver) {
+      gameState.currentTurn = game_turn.hero;
+      gameState.increaseTurnCount();
+      decks.monsterTurnOver = false;
+    }
+  }
+)
+
 export default decks;
