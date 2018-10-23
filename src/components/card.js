@@ -8,6 +8,10 @@ const cardSource = {
   beginDrag(props) {
     console.log('begin drag: ', props);
     return { id: props.index }
+  },
+
+  endDrag(props) {
+    props.playCard();
   }
 }
 

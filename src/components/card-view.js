@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   font-size: 14px;
   user-select: none;
   border-radius: 8px;
+  cursor: move;
 
   p {
     margin: 0;

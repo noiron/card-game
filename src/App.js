@@ -251,6 +251,8 @@ class App extends Component {
             decks.heroDeck.map((card, index) => {
               return <Card
                 name={card.name}
+                id={card.id}
+                index={index}
                 desc={card.desc}
                 attack={card.attack}
                 armor={card.armor}
