@@ -41,15 +41,28 @@ class Decks {
     });
   }
 
-  @action
-  removeHeroCard(id, index) {
+  @action removeHeroCard(id, index) {
     this.usedCards.push(this.heroDeck[index]);
     this.heroDeck = this.heroDeck.filter(card => card.id !== id);
   }
 
-  @action
-  removeBossCard(id, index) {
+  @action removeBossCard(id, index) {
     this.usedCards.push(this.bossDeck[index]);
+  }
+
+  // 给玩家发牌的方法
+  @action dealCards() {
+    // FIXME: 随便生成 N 张牌
+    const seed = seeds.heroSeeds[0];
+    const target = seed.positive ? card_target.hero : card_target.monster;
+    
+    const card = new CardModel({
+      ...seed,
+      id: utils.uuid(),
+      target,
+      source: card_source.hero,
+    });
+    this.heroDeck.push(card);
   }
 
 }
@@ -64,6 +77,7 @@ reaction(
       gameState.currentTurn = game_turn.hero;
       gameState.increaseTurnCount();
       decks.monsterTurnOver = false;
+      decks.dealCards();
     }
   }
 )

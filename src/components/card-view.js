@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 const Wrapper = styled.div`
   width: 90px;
@@ -11,6 +12,10 @@ const Wrapper = styled.div`
   user-select: none;
   border-radius: 8px;
   cursor: move;
+
+  &.is-dragging {
+    opacity: 0.3;
+  }
 
   p {
     margin: 0;
@@ -34,10 +39,13 @@ class CardView extends Component {
   }
 
   render() {
-    const { name, desc, attack, armor, source } = this.props;
+    const { name, desc, attack, armor, source, isDragging } = this.props;
 
     return (
-      <Wrapper className={"card " + source} onDoubleClick={this.handleDoubleClick}>
+      <Wrapper 
+        className={classNames('card', source, { 'is-dragging': isDragging})}  
+        onDoubleClick={this.handleDoubleClick}
+      >
         <p className="name">{name}</p>
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack > 0 && <p>攻击：{attack}</p>}

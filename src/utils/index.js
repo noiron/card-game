@@ -1,12 +1,10 @@
 
 // copy from mobx-todomvc
 export function	uuid() {
-	/*jshint bitwise:false */
-	var i, random;
-	var uuid = '';
+	let uuid = '';
 
-	for (i = 0; i < 32; i++) {
-		random = Math.random() * 16 | 0;
+	for (let i = 0; i < 32; i++) {
+		const random = Math.random() * 16 | 0;
 		if (i === 8 || i === 12 || i === 16 || i === 20) {
 			uuid += '-';
 		}

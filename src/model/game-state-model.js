@@ -5,7 +5,7 @@ import { observable, computed, action, autorun, reaction } from 'mobx';
 import { game_turn, run_status } from '../constants';
 
 class GameState {
-  @observable currentTurn;
+  @observable currentTurn;  // 记录是玩家还是敌人的回合
   @observable runStatus;
   @observable effects;
   @observable turnCount; // 记录当前是第几回合
