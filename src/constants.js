@@ -19,3 +19,7 @@ export const run_status = {
   win: 'win',
   lose: 'lose',
 }
+
+export const item_types = {
+  card: 'card',
+}

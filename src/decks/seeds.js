@@ -23,6 +23,14 @@ const seed2 = {
   positive: false,
 };
 
+const seed3 = {
+  name: '防御',
+  desc: '🤺',
+  attack: 0,
+  armor: 5,
+  positive: true,
+}
 
-export const heroSeeds = [seed0, seed1, seed2, seed0];
+
+export const heroSeeds = [seed0, seed1, seed2, seed3];
 export const monsterSeeds = [seed0, seed1, seed1];
