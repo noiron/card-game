@@ -16,28 +16,13 @@ class Decks {
 
   constructor() {
     seeds.heroSeeds.forEach(seed => {
-      // 区分正面效果和负面效果牌
-      const target = seed.positive ? card_target.hero : card_target.monster;
-    
-      const card = new CardModel({
-        ...seed,
-        id: utils.uuid(),
-        target,
-        source: card_source.hero,
-      });
+      const card = generateCardFromSeed(card_source.hero, seed);
       this.heroDeck.push(card);
     });
 
     seeds.monsterSeeds.forEach(seed => {
-      const target = seed.positive ? card_target.monster : card_target.hero;
-
-      const card = new CardModel({
-        ...seed,
-        id: utils.uuid(),
-        target,
-        source: card_source.monster,
-      });
-      this.bossDeck.push(card);
+      const card = generateCardFromSeed(card_source.monster, seed);
+      this.bossDeck.push(card); 
     });
   }
 
@@ -52,17 +37,10 @@ class Decks {
 
   // 给玩家发牌的方法
   @action dealCards() {
-    // FIXME: 随便生成 N 张牌
-    const seed = seeds.heroSeeds[0];
-    const target = seed.positive ? card_target.hero : card_target.monster;
-    
-    const card = new CardModel({
-      ...seed,
-      id: utils.uuid(),
-      target,
-      source: card_source.hero,
-    });
-    this.heroDeck.push(card);
+    // TODO: 随机生成不同种类的卡牌
+    const card1 = generateCardFromSeed(card_source.hero, seeds.heroSeeds[0]);
+    const card2 = generateCardFromSeed(card_source.hero, seeds.heroSeeds[3]);
+    this.heroDeck.push(card1, card2);
   }
 
 }
@@ -83,3 +61,21 @@ reaction(
 )
 
 export default decks;
+
+
+function generateCardFromSeed(source, seed) {
+  let target;
+  if (source === card_source.hero) {
+    target = seed.positive ? card_target.hero : card_target.monster;
+  } else {
+    target = seed.positive ? card_target.monster : card_target.hero;
+  }
+  
+  const card = new CardModel({
+    ...seed,
+    id: utils.uuid(),
+    target,
+    source,
+  });
+  return card;
+}
