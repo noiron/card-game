@@ -12,6 +12,7 @@ import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
+import { toJS } from 'mobx';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -92,18 +93,16 @@ class App extends Component {
 
   // 玩家出牌
   playCard = (id, index) => {
-    const { gameState } = this.props;
+    const { gameState, decks } = this.props;
     
     if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
 
-    const { decks } = this.props;
-
     // 根据id从玩家手上的牌组中移除这张牌
-    const currentCard = decks.heroDeck[index];
-    decks.removeHeroCard(id, index);
+    const currentCard = decks.heroHand.filter(card => card.id === id)[0];
     this.calculateCardEffect(currentCard);
+    decks.removeHeroCard(id);
   }
 
   calculateCardEffect = (currentCard) => {
@@ -174,14 +173,20 @@ class App extends Component {
   bossStartAction() {
     // boss 依次发牌
     const { decks, gameState } = this.props;
-    const { bossDeck } = decks;
+    const { monsterHand } = decks;
 
-    bossDeck.forEach((card, index) => {
+
+    // 非第一回合时，给敌人发两张牌
+    if (gameState.turnCount > 1) {
+      decks.dealMonsterCards();
+    }
+
+    monsterHand.forEach((card, index) => {
       setTimeout(() => {
         if (gameState.isGameOver) return;
         this.calculateCardEffect(card);
-        decks.removeBossCard(card.id, index);
-        if (index >= bossDeck.length - 1) {
+        decks.removeBossCard(card.id);
+        if (index >= monsterHand.length - 1) {
           decks.monsterTurnOver = true;
         }
 
@@ -231,7 +236,7 @@ class App extends Component {
                   armor={card.armor}
                   index={index}
                   source={card.source}
-                  playCard={() => { }}
+                  playCard={() => {}}
 
                   key={Math.random()}
                 ></CardView>
@@ -248,7 +253,7 @@ class App extends Component {
             className="person"
           />
           {
-            decks.heroDeck.map((card, index) => {
+            decks.heroHand.map((card, index) => {
               return <Card
                 name={card.name}
                 id={card.id}
@@ -257,7 +262,7 @@ class App extends Component {
                 attack={card.attack}
                 armor={card.armor}
                 source={card.source}
-                playCard={() => this.playCard(card.id, index)}
+                playCard={() => this.playCard(card.id)}
 
                 key={Math.random()}
               ></Card>
