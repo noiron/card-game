@@ -12,6 +12,7 @@ import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
+import { toJS } from 'mobx';
 
 const Wrapper = styled.div`
   width: 700px;
@@ -101,7 +102,7 @@ class App extends Component {
     const { decks } = this.props;
 
     // 根据id从玩家手上的牌组中移除这张牌
-    const currentCard = decks.heroDeck[index];
+    const currentCard = decks.heroHand[index];
     decks.removeHeroCard(id, index);
     this.calculateCardEffect(currentCard);
   }
@@ -174,14 +175,20 @@ class App extends Component {
   bossStartAction() {
     // boss 依次发牌
     const { decks, gameState } = this.props;
-    const { bossDeck } = decks;
+    const { monsterHand } = decks;
 
-    bossDeck.forEach((card, index) => {
+
+    // 非第一回合时，给敌人发两张牌
+    if (gameState.turnCount > 1) {
+      decks.dealMonsterCards();
+    }
+
+    monsterHand.forEach((card, index) => {
       setTimeout(() => {
         if (gameState.isGameOver) return;
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id, index);
-        if (index >= bossDeck.length - 1) {
+        if (index >= monsterHand.length - 1) {
           decks.monsterTurnOver = true;
         }
 
@@ -248,7 +255,7 @@ class App extends Component {
             className="person"
           />
           {
-            decks.heroDeck.map((card, index) => {
+            decks.heroHand.map((card, index) => {
               return <Card
                 name={card.name}
                 id={card.id}

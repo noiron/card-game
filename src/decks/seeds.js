@@ -1,5 +1,5 @@
 // 定义一组 seed，作为卡牌的属性，以此来生成 cardModel 
-const seed0 = {
+const seedAttack1 = {
   name: '攻击',
   desc: '🐓',
   attack: 10,
@@ -7,15 +7,7 @@ const seed0 = {
   positive: false,
 };
 
-const seed1 = {
-  name: '防御',
-  desc: '🛡',
-  attack: 0,
-  armor: 1,
-  positive: true,
-};
-
-const seed2 = {
+const seedAttack2 = {
   name: '攻击',
   desc: '⚔',
   attack: 1,
@@ -23,14 +15,72 @@ const seed2 = {
   positive: false,
 };
 
-const seed3 = {
+const seedDefend1 = {
+  name: '防御',
+  desc: '🛡',
+  attack: 0,
+  armor: 1,
+  positive: true,
+};
+
+const seedDefend2 = {
   name: '防御',
   desc: '🤺',
   attack: 0,
   armor: 5,
   positive: true,
+};
+
+const config = [
+  {
+    seed: seedAttack1,
+    num: 3,
+  },
+  {
+    seed: seedAttack2,
+    num: 3,
+  },
+  {
+    seed: seedDefend1,
+    num: 2,
+  },
+  {
+    seed: seedDefend2,
+    num: 2,
+  },
+]
+
+// 一个配置对象，给定 seed 种类及数量，生成一个 seed 数组
+function generateSeeds(config) {
+  const result = [];
+
+  config.forEach(s => {
+    for (let i = 0; i < s.num; i++) {
+      result.push(s.seed);
+    }
+  })
+
+  return result;
 }
 
+const heroSeeds = generateSeeds(config);
+const monsterSeeds = generateSeeds(config);
 
-export const heroSeeds = [seed0, seed1, seed2, seed3];
-export const monsterSeeds = [seed0, seed1, seed1];
+export default {
+  heroSeeds,
+  monsterSeeds,
+};
+
+
+// export const heroSeeds = [seed0, seed1, seed2, seed3];
+// export const monsterSeeds = [seed0, seed1, seed1];
+
+// 游戏规则：
+// 双方各有十张牌，每次各发两张牌
+// 如果双方手中都已无牌，则比较双方的生命值决定结果
+
+// TODO: 加入回复生命的卡牌
+
+
+
+

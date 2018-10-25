@@ -23,3 +23,8 @@ export const run_status = {
 export const item_types = {
   card: 'card',
 }
+
+export const init_cards_num = {
+  hero: 3,
+  monster: 1,
+}
