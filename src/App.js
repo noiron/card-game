@@ -93,18 +93,16 @@ class App extends Component {
 
   // 玩家出牌
   playCard = (id, index) => {
-    const { gameState } = this.props;
+    const { gameState, decks } = this.props;
     
     if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
 
-    const { decks } = this.props;
-
     // 根据id从玩家手上的牌组中移除这张牌
-    const currentCard = decks.heroHand[index];
-    decks.removeHeroCard(id, index);
+    const currentCard = decks.heroHand.filter(card => card.id === id)[0];
     this.calculateCardEffect(currentCard);
+    decks.removeHeroCard(id);
   }
 
   calculateCardEffect = (currentCard) => {
@@ -187,7 +185,7 @@ class App extends Component {
       setTimeout(() => {
         if (gameState.isGameOver) return;
         this.calculateCardEffect(card);
-        decks.removeBossCard(card.id, index);
+        decks.removeBossCard(card.id);
         if (index >= monsterHand.length - 1) {
           decks.monsterTurnOver = true;
         }
@@ -238,7 +236,7 @@ class App extends Component {
                   armor={card.armor}
                   index={index}
                   source={card.source}
-                  playCard={() => { }}
+                  playCard={() => {}}
 
                   key={Math.random()}
                 ></CardView>
@@ -264,7 +262,7 @@ class App extends Component {
                 attack={card.attack}
                 armor={card.armor}
                 source={card.source}
-                playCard={() => this.playCard(card.id, index)}
+                playCard={() => this.playCard(card.id)}
 
                 key={Math.random()}
               ></Card>

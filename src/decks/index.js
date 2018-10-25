@@ -56,15 +56,15 @@ class Decks {
   }
 
   // 玩家出牌
-  @action removeHeroCard(id, index) {
-    this.usedCards.push(this.heroHand[index]);
+  @action removeHeroCard(id) {
+    const card = this.heroHand.filter(card => card.id === id)[0];
+    this.usedCards.push(card);
     this.heroHand = this.heroHand.filter(card => card.id !== id);
   }
 
   // 敌人出牌
-  @action removeBossCard(id, index) {
-    console.log('对手手牌： ', toJS(this.monsterHand));
-    console.log(index);
+  @action removeBossCard(id) {
+    // 当前处理方式为，敌人按顺序依次出牌
     this.usedCards.push(this.monsterHand[0]);
     this.monsterHand = this.monsterHand.filter(card => card.id !== id);
   }
