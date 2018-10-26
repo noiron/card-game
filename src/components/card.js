@@ -5,14 +5,17 @@ import { item_types } from '../constants';
 import CardView from './card-view';
 
 const cardSource = {
-  beginDrag(props) {
-    console.log('begin drag: ', props);
-    return { id: props.index }
+  beginDrag(card) {
+    console.log('begin drag: ');
+    return ({ 
+      id: card.id,
+      playCard: card.playCard
+    })
   },
 
-  endDrag(props) {
-    props.playCard();
-  }
+  // endDrag(props) {
+  //   props.playCard();
+  // }
 }
 
 @DragSource(

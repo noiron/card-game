@@ -13,16 +13,30 @@ import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
 import config from './config';
-import { toJS } from 'mobx';
+// import { toJS } from 'mobx';
+import rough from 'roughjs';
+
+const game_board_width = 700;
+const game_board_height = 500;
+
 
 const Wrapper = styled.div`
-  width: 700px;
-  min-height: 500px;
-  border: 2px solid #000;
-  border-radius: 15px;
-  padding: 10px;
+  width: ${game_board_width}px;
+  min-height: ${game_board_height}px;
+  /* border: 2px solid #000; */
+  /* border-radius: 15px; */
+  padding: 20px;
   margin: 40px auto;
   position: relative;
+`;
+
+const Background = styled.svg`
+  width: ${game_board_width + 80}px;
+  height: ${game_board_height + 80}px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 `;
 
 const TurnFlag = styled.div`
@@ -37,9 +51,9 @@ const TurnFlag = styled.div`
 const EnemyArea = styled.div`
   width: 100%;
   height: 130px;
-  border: 2px solid pink;
+  /* border: 2px solid pink; */
+  /* border-radius: 10px; */
   box-sizing: border-box;
-  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,9 +67,9 @@ const PlayerCardsArea = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 20px;
-  border: 2px solid lightgreen;
+  /* border: 2px solid lightgreen; */
+  /* border-radius: 10px; */
   box-sizing: border-box;
-  border-radius: 10px;
 
   .card {
     margin-right: 15px;
@@ -74,10 +88,10 @@ const Dustbin = styled.div`
   display: box;
   justify-content: center;
   align-items: center;
-  border: 2px solid lightblue;
+  /* border: 2px solid lightblue; */
+  /* border-radius: 10px; */
   margin: 10px 0;
-  border-radius: 10px;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .card {
     margin-right: 20px;
@@ -91,6 +105,10 @@ const Dustbin = styled.div`
 
 @observer
 class App extends Component {
+
+  componentDidMount() {
+    setBackground();
+  }
 
   // 玩家出牌
   playCard = (id, index) => {
@@ -214,6 +232,7 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
+        <Background id="svg-background"></Background>
         <TurnFlag>
           第{gameState.turnCount}回合{'  '}  
           {gameState.currentTurn === game_turn.hero ? '你的' : '对手的'}回合
@@ -238,8 +257,7 @@ class App extends Component {
                   index={index}
                   source={card.source}
                   playCard={() => {}}
-
-                  key={Math.random()}
+                  key={card.id}
                 ></CardView>
               })
             }
@@ -264,8 +282,7 @@ class App extends Component {
                 armor={card.armor}
                 source={card.source}
                 playCard={() => this.playCard(card.id)}
-
-                key={Math.random()}
+                key={card.id}
               ></Card>
             })
           }
@@ -288,7 +305,7 @@ class App extends Component {
         {/* 显示游戏内部信息 */}
         {
           config.show_game_info && (
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ marginTop: '50px' }}>
               <p>你的手牌数量：{decks.heroHand.length}</p>
               <p>你的牌堆中的卡牌数量：{decks.heroDeck.length}</p>
               <p>敌方手牌数量：{decks.monsterHand.length}</p>
@@ -310,5 +327,13 @@ App.propTypes = {
   gameState: MobxPropTypes.observableObject.isRequired,
 }
 
-
 export default App;
+
+function setBackground() {
+  const svgBg = document.getElementById('svg-background');
+  const rc = rough.svg(svgBg);
+  let node = rc.rectangle(10, 10, 740, 540, {
+    roughness: 1.5
+  });
+  svgBg.appendChild(node);
+}
