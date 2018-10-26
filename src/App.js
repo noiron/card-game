@@ -12,6 +12,7 @@ import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
+import config from './config';
 import { toJS } from 'mobx';
 
 const Wrapper = styled.div`
@@ -57,7 +58,7 @@ const PlayerCardsArea = styled.div`
   border-radius: 10px;
 
   .card {
-    margin-right: 20px;
+    margin-right: 15px;
   }
 
   .person {
@@ -283,6 +284,18 @@ class App extends Component {
           />
         })}
 
+
+        {/* 显示游戏内部信息 */}
+        {
+          config.show_game_info && (
+            <div style={{ marginTop: '20px' }}>
+              <p>你的手牌数量：{decks.heroHand.length}</p>
+              <p>你的牌堆中的卡牌数量：{decks.heroDeck.length}</p>
+              <p>敌方手牌数量：{decks.monsterHand.length}</p>
+              <p>敌方牌堆中的卡牌数量：{decks.monsterDeck.length}</p>
+            </div>
+          )
+        }
 
         {this.showRunStatus()}
       </Wrapper>

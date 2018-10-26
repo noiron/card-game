@@ -35,11 +35,11 @@ autorun(() => {
   console.log('当前是第' + gameState.turnCount + '回合');
 })
 
-reaction(
-  () => gameState.turnCount,
-  (count, reaction) => {
-      console.log("reaction 3: invoked. counter.count = " + count);
-  }
-);
+// reaction(
+//   () => gameState.turnCount,
+//   (count, reaction) => {
+//       console.log("reaction 3: invoked. counter.count = " + count);
+//   }
+// );
 
 export default gameState;
