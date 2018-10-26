@@ -43,7 +43,8 @@ class Person extends Component {
     const strokeColor = '#333 ';
     const node = rc.rectangle(0, 0, 130, 130, {
       stroke: strokeColor,
-      roughness: 2.5
+      strokeWidth: 3,
+      roughness: 2.5,
     });
     svg.appendChild(node);
   }

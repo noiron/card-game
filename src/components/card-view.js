@@ -73,6 +73,10 @@ class CardView extends Component {
     svg.appendChild(node);
   }
 
+  handleHover = () => {
+    console.log('hover a card');
+  }
+
   render() {
     const { name, desc, attack, armor, source, isDragging } = this.props;
 
@@ -80,6 +84,7 @@ class CardView extends Component {
       <Wrapper 
         className={classNames('card', source, { 'is-dragging': isDragging})}  
         onDoubleClick={this.handleDoubleClick}
+        onMouseEnter={this.handleHover}
       >
         <svg className="card-border" ref={'cardBorder'}></svg>
         <p className="name">{name}</p>

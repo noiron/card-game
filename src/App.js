@@ -70,6 +70,7 @@ const PlayerCardsArea = styled.div`
   /* border: 2px solid lightgreen; */
   /* border-radius: 10px; */
   box-sizing: border-box;
+  position: relative;
 
   .card {
     margin-right: 15px;
@@ -77,6 +78,16 @@ const PlayerCardsArea = styled.div`
 
   .person {
     margin-right: 20px;
+  }
+
+  .card-list {
+    width: calc(100% - 150px);
+    display: flex;
+    overflow-x: auto;
+    height: 165px;
+    position: absolute;
+    left: 160px;
+    top: 10px;
   }
 `;
 
@@ -271,6 +282,7 @@ class App extends Component {
             maxLife={hero.maxLife}
             className="person"
           />
+          <div className="card-list">
           {
             decks.heroHand.map((card, index) => {
               return <Card
@@ -286,9 +298,10 @@ class App extends Component {
               ></Card>
             })
           }
+          </div>
 
           {gameState.currentTurn === game_turn.hero
-            && <button onClick={this.nextTurn}>下一回合</button>}
+            && <NextTurnButton onClick={this.nextTurn}>下一回合</NextTurnButton>}
         </PlayerCardsArea>
 
         {gameState.effects.map(e => {
@@ -296,11 +309,9 @@ class App extends Component {
             name={e.name}
             value={e.value}
             target={e.target}
-
             key={Math.random()}
           />
         })}
-
 
         {/* 显示游戏内部信息 */}
         {
@@ -337,3 +348,13 @@ function setBackground() {
   });
   svgBg.appendChild(node);
 }
+
+
+const NextTurnButton = styled.button`
+  width: 100px;
+  height: 50px;
+  border: 2px solid #ddd;
+  position: absolute;
+  top: 220px;
+  right: 50px;
+`;

@@ -39,10 +39,11 @@ class Monster extends Component {
   setBorder = () => {
     const svg = this.refs.monsterBorder;
     const rc = rough.svg(svg);
-    const strokeColor = '#f00';
+    const strokeColor = '#000';
     const node = rc.rectangle(0, 0, 110, 110, {
       stroke: strokeColor,
-      roughness: 2.5
+      strokeWidth: 3,
+      roughness: 2
     });
     svg.appendChild(node);
   }
