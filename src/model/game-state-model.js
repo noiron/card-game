@@ -9,6 +9,7 @@ class GameState {
   @observable runStatus;
   @observable effects;
   @observable turnCount; // 记录当前是第几回合
+  @observable showHistory = false;
 
   @computed get isGameOver() {
     return this.runStatus === run_status.win 

@@ -10,6 +10,7 @@ import Effect from './components/effect';
 import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
+import History from './components/history';
 
 import { card_target, game_turn, run_status } from './constants';
 import config from './config';
@@ -141,6 +142,11 @@ class App extends Component {
     return null;
   }
 
+  toggleHistory = () => {
+    const { gameState } = this.props;
+    gameState.showHistory = !gameState.showHistory;
+  }
+
   render() {
     const { hero, boss, decks, gameState } = this.props;
     const { usedCards, currentCards } = decks;
@@ -206,6 +212,9 @@ class App extends Component {
           }
           </div>
 
+          <ShowHistoryButton onClick={this.toggleHistory}>
+            显示历史
+            </ShowHistoryButton>
           {gameState.currentTurn === game_turn.hero
             && <NextTurnButton onClick={this.nextTurn}>下一回合</NextTurnButton>}
         </PlayerCardsArea>
@@ -229,6 +238,11 @@ class App extends Component {
               <p>敌方牌堆中的卡牌数量：{decks.monsterDeck.length}</p>
             </div>
           )
+        }
+
+        {
+          gameState.showHistory &&
+          <History usedCards={usedCards} closeHistory={this.toggleHistory} />
         }
 
         {this.showRunStatus()}
@@ -350,6 +364,15 @@ const Dustbin = styled.div`
   }
 `;
 
+// TODO: 按钮样式可复用
+const ShowHistoryButton = styled.button`
+  width: 100px;
+  height: 50px;
+  border: 2px solid #ddd;
+  position: absolute;
+  top: 220px;
+  right: 180px;
+`;
 
 const NextTurnButton = styled.button`
   width: 100px;

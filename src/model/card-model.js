@@ -9,6 +9,7 @@ class CardModel {
     this.target = info.target;
     this.source = info.source;
     this.extraInfo = info.extraInfo;
+    this.playedTime = null;
   }
 
 
