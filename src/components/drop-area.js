@@ -26,6 +26,7 @@ const dropTarget = {
 )
 class DropArea extends React.Component {
   render() {
+    // eslint-disable-next-line
     const { connectDropTarget, canDrop, isOver } = this.props;
 
     return (

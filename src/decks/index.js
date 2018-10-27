@@ -31,9 +31,10 @@ function generateCardFromSeed(source, seed) {
 class Decks {
   @observable heroDeck = [];  // 牌堆
   @observable monsterDeck = [];
-  @observable usedCards = [];
   @observable heroHand = [];  // 手牌
   @observable monsterHand = [];
+  @observable usedCards = []; // 所有使用过的卡牌
+  @observable currentCards = []; // 当前正在使用的卡牌
   
   @observable monsterUsedCardsCount = 0;
   @observable monsterTurnOver = false;
@@ -59,6 +60,7 @@ class Decks {
   @action removeHeroCard(id) {
     const card = this.heroHand.filter(card => card.id === id)[0];
     this.usedCards.push(card);
+    this.currentCards.push(card);
     this.heroHand = this.heroHand.filter(card => card.id !== id);
   }
 
@@ -66,6 +68,7 @@ class Decks {
   @action removeBossCard(id) {
     // 当前处理方式为，敌人按顺序依次出牌
     this.usedCards.push(this.monsterHand[0]);
+    this.currentCards.push(this.monsterHand[0])
     this.monsterHand = this.monsterHand.filter(card => card.id !== id);
   }
 
@@ -93,8 +96,9 @@ reaction(
       gameState.increaseTurnCount();
       decks.monsterTurnOver = false;
       decks.dealCards();
+      decks.currentCards = [];
     }
-  }
+  }, { delay: 4000 }
 )
 
 export default decks;

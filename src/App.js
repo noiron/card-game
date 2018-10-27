@@ -143,7 +143,7 @@ class App extends Component {
 
   render() {
     const { hero, boss, decks, gameState } = this.props;
-    const { usedCards } = decks;
+    const { usedCards, currentCards } = decks;
 
     return (
       <Wrapper className="App">
@@ -163,9 +163,7 @@ class App extends Component {
 
           <Dustbin>
             {
-              usedCards.map((card, index) => {
-                console.log(card.extraInfo);
-                console.log(card);
+              currentCards.map((card, index) => {
                 return <CardView
                   name={card.name}
                   desc={card.desc}

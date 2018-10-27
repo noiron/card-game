@@ -1,7 +1,7 @@
 /**
  * 记录游戏的中的各种状态信息，如当前是谁的回合，游戏的输赢状态
  */
-import { observable, computed, action, autorun, reaction } from 'mobx';
+import { observable, computed, action, autorun } from 'mobx';
 import { game_turn, run_status } from '../constants';
 
 class GameState {

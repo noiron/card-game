@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import rough from 'roughjs';
 import { card_source } from '../constants';
+import { delay } from '../utils';
 import CardDesc from './card-info';
 
 const Wrapper = styled.div`
@@ -81,15 +82,13 @@ class CardView extends Component {
   }
 
   handleHover = () => {
-    console.log('hover a card');
     this.isMouseIn = true;
 
     // 延时之后显示额外的卡牌说明信息
-    setTimeout(() => {
+    delay(1000).then(() => {
       if (!this.isMouseIn || this.props.isDragging) return;
       this.setState({ shouldShowInfo: true });
-    }, 1000);
-
+    })
   }
 
   handleLeave = () => {
@@ -99,8 +98,6 @@ class CardView extends Component {
 
   render() {
     const { name, desc, attack, armor, source, isDragging, extraInfo } = this.props;
-
-    console.log(extraInfo);
 
     return (
       <Wrapper 
