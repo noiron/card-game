@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import rough from 'roughjs';
 import { card_source } from '../constants';
+import CardDesc from './card-info';
 
 const Wrapper = styled.div`
   width: 90px;
@@ -46,10 +47,16 @@ const Wrapper = styled.div`
 
 class CardView extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   // let cardBorder = React.createRef();
-  // }
+  constructor(props) {
+    super(props);
+    // let cardBorder = React.createRef();
+
+    this.state = {
+      shouldShowInfo: false,
+    }
+
+    this.isMouseIn = false;
+  }
   
   componentDidMount() {
     this.setBorder();
@@ -75,22 +82,40 @@ class CardView extends Component {
 
   handleHover = () => {
     console.log('hover a card');
+    this.isMouseIn = true;
+
+    // 延时之后显示额外的卡牌说明信息
+    setTimeout(() => {
+      if (!this.isMouseIn || this.props.isDragging) return;
+      this.setState({ shouldShowInfo: true });
+    }, 1000);
+
+  }
+
+  handleLeave = () => {
+    this.setState({ shouldShowInfo: false });
+    this.isMouseIn = false;
   }
 
   render() {
-    const { name, desc, attack, armor, source, isDragging } = this.props;
+    const { name, desc, attack, armor, source, isDragging, extraInfo } = this.props;
+
+    console.log(extraInfo);
 
     return (
       <Wrapper 
         className={classNames('card', source, { 'is-dragging': isDragging})}  
         onDoubleClick={this.handleDoubleClick}
         onMouseEnter={this.handleHover}
+        onMouseLeave={this.handleLeave}
       >
         <svg className="card-border" ref={'cardBorder'}></svg>
         <p className="name">{name}</p>
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack > 0 && <p>攻击：{attack}</p>}
         {armor >0  && <p>护甲：{armor}</p>}
+
+        {(this.state.shouldShowInfo && !isDragging) && <CardDesc info={extraInfo} />}
       </Wrapper>
     )
   }

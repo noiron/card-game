@@ -18,7 +18,7 @@ function generateCardFromSeed(source, seed) {
   } else {
     target = seed.positive ? card_target.monster : card_target.hero;
   }
-  
+
   const card = new CardModel({
     ...seed,
     id: utils.uuid(),

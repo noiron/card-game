@@ -8,6 +8,7 @@ class CardModel {
     this.positive = info.positive;
     this.target = info.target;
     this.source = info.source;
+    this.extraInfo = info.extraInfo;
   }
 
 

@@ -19,101 +19,6 @@ import rough from 'roughjs';
 const game_board_width = 700;
 const game_board_height = 500;
 
-
-const Wrapper = styled.div`
-  width: ${game_board_width}px;
-  min-height: ${game_board_height}px;
-  /* border: 2px solid #000; */
-  /* border-radius: 15px; */
-  padding: 20px;
-  margin: 40px auto;
-  position: relative;
-`;
-
-const Background = styled.svg`
-  width: ${game_board_width + 80}px;
-  height: ${game_board_height + 80}px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-`;
-
-const TurnFlag = styled.div`
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translate(-50%);
-  color: green;
-  white-space: pre;
-`;
-
-const EnemyArea = styled.div`
-  width: 100%;
-  height: 130px;
-  /* border: 2px solid pink; */
-  /* border-radius: 10px; */
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const playerAreaHeight = 150;
-
-const PlayerCardsArea = styled.div`
-  width: 100%;
-  height: ${playerAreaHeight}px;
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  /* border: 2px solid lightgreen; */
-  /* border-radius: 10px; */
-  box-sizing: border-box;
-  position: relative;
-
-  .card {
-    margin-right: 15px;
-  }
-
-  .person {
-    margin-right: 20px;
-  }
-
-  .card-list {
-    width: calc(100% - 150px);
-    display: flex;
-    overflow-x: auto;
-    height: 165px;
-    position: absolute;
-    left: 160px;
-    top: 10px;
-  }
-`;
-
-const Dustbin = styled.div`
-  width: 100%;
-  height: 200px;
-  box-sizing: border-box;
-  display: -webkit-box;
-  display: box;
-  justify-content: center;
-  align-items: center;
-  /* border: 2px solid lightblue; */
-  /* border-radius: 10px; */
-  margin: 10px 0;
-  overflow-x: auto;
-
-  .card {
-    margin-right: 20px;
-    flex: 0 0 90px;
-  }
-
-  .card.monster {
-    border-color: red;
-  }
-`;
-
 @observer
 class App extends Component {
 
@@ -122,9 +27,8 @@ class App extends Component {
   }
 
   // 玩家出牌
-  playCard = (id, index) => {
+  playCard = (id) => {
     const { gameState, decks } = this.props;
-    
     if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
@@ -260,6 +164,8 @@ class App extends Component {
           <Dustbin>
             {
               usedCards.map((card, index) => {
+                console.log(card.extraInfo);
+                console.log(card);
                 return <CardView
                   name={card.name}
                   desc={card.desc}
@@ -268,6 +174,7 @@ class App extends Component {
                   index={index}
                   source={card.source}
                   playCard={() => {}}
+                  extraInfo={card.extraInfo}
                   key={card.id}
                 ></CardView>
               })
@@ -293,6 +200,7 @@ class App extends Component {
                 attack={card.attack}
                 armor={card.armor}
                 source={card.source}
+                extraInfo={card.extraInfo}
                 playCard={() => this.playCard(card.id)}
                 key={card.id}
               ></Card>
@@ -348,6 +256,101 @@ function setBackground() {
   });
   svgBg.appendChild(node);
 }
+
+
+const Wrapper = styled.div`
+  width: ${game_board_width}px;
+  min-height: ${game_board_height}px;
+  /* border: 2px solid #000; */
+  /* border-radius: 15px; */
+  padding: 20px;
+  margin: 40px auto;
+  position: relative;
+`;
+
+const Background = styled.svg`
+  width: ${game_board_width + 80}px;
+  height: ${game_board_height + 80}px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+`;
+
+const TurnFlag = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  color: green;
+  white-space: pre;
+`;
+
+const EnemyArea = styled.div`
+  width: 100%;
+  height: 130px;
+  /* border: 2px solid pink; */
+  /* border-radius: 10px; */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const playerAreaHeight = 150;
+
+const PlayerCardsArea = styled.div`
+  width: 100%;
+  height: ${playerAreaHeight}px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  /* border: 2px solid lightgreen; */
+  /* border-radius: 10px; */
+  box-sizing: border-box;
+  position: relative;
+
+  .card {
+    margin-right: 15px;
+  }
+
+  .person {
+    margin-right: 20px;
+  }
+
+  .card-list {
+    width: calc(100% - 150px);
+    display: flex;
+    overflow-x: auto;
+    height: 165px;
+    position: absolute;
+    left: 160px;
+    top: 10px;
+  }
+`;
+
+const Dustbin = styled.div`
+  width: 100%;
+  height: 200px;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: box;
+  justify-content: center;
+  align-items: center;
+  /* border: 2px solid lightblue; */
+  /* border-radius: 10px; */
+  margin: 10px 0;
+  overflow-x: auto;
+
+  .card {
+    margin-right: 20px;
+    flex: 0 0 90px;
+  }
+
+  .card.monster {
+    border-color: red;
+  }
+`;
 
 
 const NextTurnButton = styled.button`
