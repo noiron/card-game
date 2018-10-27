@@ -13,89 +13,22 @@ import DropArea from './components/drop-area';
 
 import { card_target, game_turn, run_status } from './constants';
 import config from './config';
-import { toJS } from 'mobx';
+// import { toJS } from 'mobx';
+import rough from 'roughjs';
 
-const Wrapper = styled.div`
-  width: 700px;
-  min-height: 500px;
-  border: 2px solid #000;
-  border-radius: 15px;
-  padding: 10px;
-  margin: 40px auto;
-  position: relative;
-`;
-
-const TurnFlag = styled.div`
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translate(-50%);
-  color: green;
-  white-space: pre;
-`;
-
-const EnemyArea = styled.div`
-  width: 100%;
-  height: 130px;
-  border: 2px solid pink;
-  box-sizing: border-box;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const playerAreaHeight = 150;
-
-const PlayerCardsArea = styled.div`
-  width: 100%;
-  height: ${playerAreaHeight}px;
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  border: 2px solid lightgreen;
-  box-sizing: border-box;
-  border-radius: 10px;
-
-  .card {
-    margin-right: 15px;
-  }
-
-  .person {
-    margin-right: 20px;
-  }
-`;
-
-const Dustbin = styled.div`
-  width: 100%;
-  height: 200px;
-  box-sizing: border-box;
-  display: -webkit-box;
-  display: box;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid lightblue;
-  margin: 10px 0;
-  border-radius: 10px;
-  overflow-x: scroll;
-
-  .card {
-    margin-right: 20px;
-    flex: 0 0 90px;
-  }
-
-  .card.monster {
-    border-color: red;
-  }
-`;
+const game_board_width = 700;
+const game_board_height = 500;
 
 @observer
 class App extends Component {
 
+  componentDidMount() {
+    setBackground();
+  }
+
   // 玩家出牌
-  playCard = (id, index) => {
+  playCard = (id) => {
     const { gameState, decks } = this.props;
-    
     if (gameState.currentTurn !== game_turn.hero) {
       return;
     }
@@ -214,6 +147,7 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
+        <Background id="svg-background"></Background>
         <TurnFlag>
           第{gameState.turnCount}回合{'  '}  
           {gameState.currentTurn === game_turn.hero ? '你的' : '对手的'}回合
@@ -230,6 +164,8 @@ class App extends Component {
           <Dustbin>
             {
               usedCards.map((card, index) => {
+                console.log(card.extraInfo);
+                console.log(card);
                 return <CardView
                   name={card.name}
                   desc={card.desc}
@@ -238,8 +174,8 @@ class App extends Component {
                   index={index}
                   source={card.source}
                   playCard={() => {}}
-
-                  key={Math.random()}
+                  extraInfo={card.extraInfo}
+                  key={card.id}
                 ></CardView>
               })
             }
@@ -253,6 +189,7 @@ class App extends Component {
             maxLife={hero.maxLife}
             className="person"
           />
+          <div className="card-list">
           {
             decks.heroHand.map((card, index) => {
               return <Card
@@ -263,15 +200,16 @@ class App extends Component {
                 attack={card.attack}
                 armor={card.armor}
                 source={card.source}
+                extraInfo={card.extraInfo}
                 playCard={() => this.playCard(card.id)}
-
-                key={Math.random()}
+                key={card.id}
               ></Card>
             })
           }
+          </div>
 
           {gameState.currentTurn === game_turn.hero
-            && <button onClick={this.nextTurn}>下一回合</button>}
+            && <NextTurnButton onClick={this.nextTurn}>下一回合</NextTurnButton>}
         </PlayerCardsArea>
 
         {gameState.effects.map(e => {
@@ -279,16 +217,14 @@ class App extends Component {
             name={e.name}
             value={e.value}
             target={e.target}
-
             key={Math.random()}
           />
         })}
 
-
         {/* 显示游戏内部信息 */}
         {
           config.show_game_info && (
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ marginTop: '50px' }}>
               <p>你的手牌数量：{decks.heroHand.length}</p>
               <p>你的牌堆中的卡牌数量：{decks.heroDeck.length}</p>
               <p>敌方手牌数量：{decks.monsterHand.length}</p>
@@ -310,5 +246,118 @@ App.propTypes = {
   gameState: MobxPropTypes.observableObject.isRequired,
 }
 
-
 export default App;
+
+function setBackground() {
+  const svgBg = document.getElementById('svg-background');
+  const rc = rough.svg(svgBg);
+  let node = rc.rectangle(10, 10, 740, 540, {
+    roughness: 1.5
+  });
+  svgBg.appendChild(node);
+}
+
+
+const Wrapper = styled.div`
+  width: ${game_board_width}px;
+  min-height: ${game_board_height}px;
+  /* border: 2px solid #000; */
+  /* border-radius: 15px; */
+  padding: 20px;
+  margin: 40px auto;
+  position: relative;
+`;
+
+const Background = styled.svg`
+  width: ${game_board_width + 80}px;
+  height: ${game_board_height + 80}px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+`;
+
+const TurnFlag = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%);
+  color: green;
+  white-space: pre;
+`;
+
+const EnemyArea = styled.div`
+  width: 100%;
+  height: 130px;
+  /* border: 2px solid pink; */
+  /* border-radius: 10px; */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const playerAreaHeight = 150;
+
+const PlayerCardsArea = styled.div`
+  width: 100%;
+  height: ${playerAreaHeight}px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  /* border: 2px solid lightgreen; */
+  /* border-radius: 10px; */
+  box-sizing: border-box;
+  position: relative;
+
+  .card {
+    margin-right: 15px;
+  }
+
+  .person {
+    margin-right: 20px;
+  }
+
+  .card-list {
+    width: calc(100% - 150px);
+    display: flex;
+    overflow-x: auto;
+    height: 165px;
+    position: absolute;
+    left: 160px;
+    top: 10px;
+  }
+`;
+
+const Dustbin = styled.div`
+  width: 100%;
+  height: 200px;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: box;
+  justify-content: center;
+  align-items: center;
+  /* border: 2px solid lightblue; */
+  /* border-radius: 10px; */
+  margin: 10px 0;
+  overflow-x: auto;
+
+  .card {
+    margin-right: 20px;
+    flex: 0 0 90px;
+  }
+
+  .card.monster {
+    border-color: red;
+  }
+`;
+
+
+const NextTurnButton = styled.button`
+  width: 100px;
+  height: 50px;
+  border: 2px solid #ddd;
+  position: absolute;
+  top: 220px;
+  right: 50px;
+`;

@@ -12,6 +12,8 @@ const Wrapper = styled.div`
   text-align: center;
   color: red;
   z-index: 10;
+  background: #fff;
+  border: 1px solid #ddd;
 
   &.target-monster {
     right: 50px;
@@ -20,7 +22,7 @@ const Wrapper = styled.div`
 
   &.target-hero {
     right: 50px;
-    bottom: 35px;
+    top: 400px;
   }
 
   .name {

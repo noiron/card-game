@@ -8,7 +8,7 @@ import * as utils from '../utils';
 import { card_target, card_source, game_turn, init_cards_num } from '../constants';
 import { observable, action, reaction } from 'mobx';
 import gameState from '../model/game-state-model';
-import { toJS } from 'mobx';
+// import { toJS } from 'mobx';
 
 
 function generateCardFromSeed(source, seed) {
@@ -18,7 +18,7 @@ function generateCardFromSeed(source, seed) {
   } else {
     target = seed.positive ? card_target.monster : card_target.hero;
   }
-  
+
   const card = new CardModel({
     ...seed,
     id: utils.uuid(),

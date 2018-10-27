@@ -1,3 +1,5 @@
+import { card_infos} from './infos';
+
 // 定义一组 seed，作为卡牌的属性，以此来生成 cardModel 
 const seedAttack1 = {
   name: '攻击',
@@ -5,6 +7,7 @@ const seedAttack1 = {
   attack: 10,
   armor: 0,
   positive: false,
+  extraInfo: card_infos.attack[0],
 };
 
 const seedAttack2 = {
@@ -13,6 +16,7 @@ const seedAttack2 = {
   attack: 1,
   armor: 0,
   positive: false,
+  extraInfo: card_infos.attack[1],
 };
 
 const seedDefend1 = {
@@ -21,6 +25,7 @@ const seedDefend1 = {
   attack: 0,
   armor: 1,
   positive: true,
+  extraInfo: card_infos.defend[0],
 };
 
 const seedDefend2 = {
@@ -29,6 +34,7 @@ const seedDefend2 = {
   attack: 0,
   armor: 5,
   positive: true,
+  extraInfo: card_infos.defend[0],
 };
 
 const config = [
