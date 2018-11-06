@@ -11,9 +11,15 @@
     "variable-name": false,
     "object-literal-sort-keys": false,
     "no-console": [true, "warning"],
-    "no-shadowed-variable": false
+    "no-shadowed-variable": false,
+    "no-unused-variable": [true, "warning"]
   },
   "rules": {
-    "ordered-imports": false
+    "ordered-imports": false,
+    "no-unused-variable": [true, "warning"],
+    "interface-name" : [true, "never-prefix"],
+    "variable-name": false,
+    "object-literal-sort-keys": false,
+    "member-access": false
   }
 }

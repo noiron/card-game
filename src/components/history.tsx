@@ -1,9 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import { card_source } from '../constants';
+import CardModel from 'src/model/card-model';
 
 class History extends React.Component {
-  generateLog(card) {
+
+  props: {
+    usedCards: CardModel[];
+    closeHistory: any;  // FIXME: 
+  }
+
+  generateLog(card: CardModel) {
     let sourceText = '';
     let sourceClassName = '';
     if (card.source === card_source.hero) {
@@ -23,7 +30,7 @@ class History extends React.Component {
 
     return (
       <Log key={card.id}>
-        {card.playedTime.toLocaleString().slice(11) + '：'}
+        {(card.playedTime as Date).toLocaleString().slice(11) + '：'}
         <span className={`source ${sourceClassName}`}>
           {`${sourceText}`}
         </span>

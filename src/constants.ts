@@ -1,15 +1,20 @@
+export interface PlayerType {
+  hero: string,
+  monster: string,
+}
+
 // 当前属于谁的回合
-export const game_turn = {
+export const game_turn : PlayerType = {
   hero: 'hero',
   monster: 'monster',
 }
 
-export const card_target = {
+export const card_target : PlayerType = {
   hero: 'hero',
   monster: 'monster',
 }
 
-export const card_source = {
+export const card_source : PlayerType = {
   hero: 'hero',
   monster: 'monster',
 }

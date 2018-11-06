@@ -1,5 +1,17 @@
 class CardModel {
-  constructor(info) {
+  id: string;
+  name: string;
+  desc: string;
+  attack: number;
+  armor: number;
+  positive: boolean;
+  target: string; // FIXME:
+  source: string; // FIXME:
+  extraInfo: string;
+  playedTime: Date | null;
+
+
+  constructor(info: any) {
     this.id = info.id;
     this.name = info.name;
     this.desc = info.desc;
