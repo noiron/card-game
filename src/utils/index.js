@@ -1,3 +1,4 @@
+/* tslint:disable no-bitwise */
 
 // copy from mobx-todomvc
 export function	uuid() {

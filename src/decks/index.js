@@ -82,7 +82,7 @@ class Decks {
 
   // 给敌人发牌
   @action dealMonsterCards() {
-    if (this.monsterDeck.length < 2) return;
+    if (this.monsterDeck.length < 2) { return; }
     this.monsterHand.push(...this.monsterDeck.splice(0, 2));
   }
 

@@ -118,7 +118,7 @@ class App extends Component {
 
     monsterHand.forEach((card, index) => {
       setTimeout(() => {
-        if (gameState.isGameOver) return;
+        if (gameState.isGameOver) { return; }
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id);
         if (index >= monsterHand.length - 1) {
@@ -133,7 +133,7 @@ class App extends Component {
   showRunStatus() {
     const { runStatus, isGameOver } = this.props.gameState;
 
-    if (runStatus === run_status.running) return null;
+    if (runStatus === run_status.running) { return null; }
 
     if (isGameOver) {
       return <GameOver status={runStatus} />
@@ -177,7 +177,7 @@ class App extends Component {
                   armor={card.armor}
                   index={index}
                   source={card.source}
-                  playCard={() => {}}
+                  playCard={() => { return; }}
                   extraInfo={card.extraInfo}
                   key={card.id}
                 ></CardView>
