@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-// import PropTypes from 'prop-types';
-// import { card_target } from '../constants';
+import { PlayerType } from '../constants';
 
 const Wrapper = styled.div`
   width: 100px;
@@ -35,14 +34,13 @@ const Wrapper = styled.div`
   }
 `;
 
-class Effect extends Component {
-  public props: {
-    name: string;
-    value: number | string;
-    // target: card_target.hero | card_target.monster;
-    target: string;
-  }
+interface IProps {
+  name: string;
+  value: number | string;
+  target: PlayerType;
+}
 
+class Effect extends Component<IProps> {
 
   // 根据效果的对象不同，分为两种类型，以此决定显示的位置
 
@@ -59,17 +57,5 @@ class Effect extends Component {
     )
   }
 }
-
-// Effect.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   value: PropTypes.oneOfType([
-//     PropTypes.number,
-//     PropTypes.string
-//   ]).isRequired,
-//   target: PropTypes.oneOf([
-//     card_target.hero,
-//     card_target.monster
-//   ]),
-// }
 
 export default Effect;

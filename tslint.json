@@ -16,10 +16,11 @@
   },
   "rules": {
     "ordered-imports": false,
-    "no-unused-variable": [true, "warning"],
-    "interface-name" : [true, "never-prefix"],
+    "no-unused-variable": [false],
+    "interface-name" : [true, "always-prefix"],
     "variable-name": false,
     "object-literal-sort-keys": false,
-    "member-access": false
+    "member-access": false,
+    "no-console": [false]
   }
 }

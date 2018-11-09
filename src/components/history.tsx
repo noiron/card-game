@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { card_source } from '../constants';
 import CardModel from 'src/model/card-model';
 
-class History extends React.Component {
+interface IProps {
+  usedCards: CardModel[];
+  closeHistory: any;  // FIXME: 
+}
 
-  props: {
-    usedCards: CardModel[];
-    closeHistory: any;  // FIXME: 
-  }
+class History extends React.Component<IProps> {
 
   generateLog(card: CardModel) {
     let sourceText = '';

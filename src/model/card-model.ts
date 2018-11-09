@@ -1,3 +1,5 @@
+import { PlayerType } from 'src/constants';
+
 class CardModel {
   id: string;
   name: string;
@@ -5,8 +7,8 @@ class CardModel {
   attack: number;
   armor: number;
   positive: boolean;
-  target: string; // FIXME:
-  source: string; // FIXME:
+  target: PlayerType;
+  source: PlayerType;
   extraInfo: string;
   playedTime: Date | null;
 
@@ -23,8 +25,6 @@ class CardModel {
     this.extraInfo = info.extraInfo;
     this.playedTime = null;
   }
-
-
 }
 
 export default CardModel;

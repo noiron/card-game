@@ -1,20 +1,21 @@
-export interface PlayerType {
-  hero: string,
-  monster: string,
+export type PlayerType = 'hero' | 'monster';
+export interface IPlayer {
+  hero: PlayerType,
+  monster: PlayerType,
 }
 
 // 当前属于谁的回合
-export const game_turn : PlayerType = {
+export const game_turn : IPlayer = {
   hero: 'hero',
   monster: 'monster',
 }
 
-export const card_target : PlayerType = {
+export const card_target : IPlayer = {
   hero: 'hero',
   monster: 'monster',
 }
 
-export const card_source : PlayerType = {
+export const card_source : IPlayer = {
   hero: 'hero',
   monster: 'monster',
 }
