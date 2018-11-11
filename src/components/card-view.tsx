@@ -46,7 +46,7 @@ const Wrapper = styled.div`
 `;
 
 interface ICardViewProps {
-  playCard: any;  // FIXME:
+  playCard: () => any;
   source?: PlayerType;
   isDragging?: boolean;
   name: string;

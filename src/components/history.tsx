@@ -5,7 +5,7 @@ import CardModel from 'src/model/card-model';
 
 interface IProps {
   usedCards: CardModel[];
-  closeHistory: any;  // FIXME: 
+  closeHistory: () => void;
 }
 
 class History extends React.Component<IProps> {

@@ -26,7 +26,7 @@ interface ICardProps {
   attack: number;
   source: PlayerType;
   armor: number;
-  playCard: any;  // FIXME:
+  playCard: () => any;
   children?: any;
   extraInfo: string;
 }
