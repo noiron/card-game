@@ -1,18 +1,28 @@
 import { observable } from 'mobx';
 
-class Hero {
-  @observable life;
-  @observable armor;
+interface IHero {
+  life: number;
+  maxLife?: number;
+  armor: number;
+  mana?: number;
+}
 
-  constructor(info) {
+
+class Hero {
+  @observable life: number;
+  @observable armor: number;
+  maxLife: number;
+  mana: number;
+
+  constructor(info: IHero) {
     this.life = info.life;
     this.maxLife = info.maxLife || 20;
     this.armor = info.armor;
-    this.mana = info.mana;
+    this.mana = info.mana || 10;
   }
 
   // 受到伤害
-  receiveAttack(value) {
+  receiveAttack(value: number) {
     if (this.armor >= value) {
       this.armor -= value;
     } else {
@@ -21,7 +31,7 @@ class Hero {
     }
   }
 
-  addArmor(value) {
+  addArmor(value: number) {
     this.armor += value;
   }
 }

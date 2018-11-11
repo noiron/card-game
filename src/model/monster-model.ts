@@ -1,17 +1,24 @@
 import { observable } from 'mobx';
 
-class Monster {
-  @observable life;
-  @observable armor;
+interface IMonster {
+  life: number;
+  armor: number;
+  mana?: number;
+}
 
-  constructor(info) {
+class Monster {
+  @observable life: number;
+  @observable armor: number;
+  @observable mana: number;
+
+  constructor(info: IMonster) {
     this.life = info.life;
     this.armor = info.armor;
     this.mana = info.mana;
   }
 
   // 受到伤害
-  receiveAttack(value) {
+  receiveAttack(value: number) {
     if (this.armor >= value) {
       this.armor -= value;
     } else {
@@ -20,7 +27,7 @@ class Monster {
     }
   }
 
-  addArmor(value) {
+  addArmor(value: number) {
     this.armor += value;
   }
 

@@ -22,7 +22,13 @@ export const card_source : IPlayer = {
   monster: 'monster',
 }
 
-export const run_status = {
+export interface IRunStatus {
+  running: GameStatusType;
+  win: GameStatusType;
+  lose: GameStatusType;
+}
+
+export const run_status: IRunStatus = {
   running: 'running',
   win: 'win',
   lose: 'lose',

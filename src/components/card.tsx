@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource, ConnectDragSource } from 'react-dnd';
-import { item_types } from '../constants';
+import { item_types, PlayerType } from '../constants';
 import CardView from './card-view';
 
 const cardSource = {
@@ -20,25 +20,21 @@ const cardSource = {
 
 
 interface ICardProps {
-  connectDragSource: ConnectDragSource;
   id: string;
   name: string;
   desc: string;
   attack: number;
+  source: PlayerType;
   armor: number;
   playCard: any;  // FIXME:
-  children: any;
+  children?: any;
+  extraInfo: string;
 }
 
-@DragSource(
-  item_types.card,
-  cardSource,
-  (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
-  })
-)
-class Card extends Component<ICardProps> {
+interface ICardCollectedProps {
+  connectDragSource: ConnectDragSource;
+}
+class Card extends Component<ICardProps & ICardCollectedProps> {
 
   handleDoubleClick = () => {
     this.props.playCard();
@@ -63,4 +59,11 @@ class Card extends Component<ICardProps> {
 //   armor: PropTypes.number,
 // }
 
-export default Card;
+export default DragSource<ICardProps, ICardCollectedProps>(
+  item_types.card,
+  cardSource,
+  (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+  })
+)(Card);

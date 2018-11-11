@@ -38,7 +38,7 @@ interface IProps {
   className: string;
 }
 
-class Person extends Component<IProps> {
+class Hero extends Component<IProps> {
   heroBorder: SVGSVGElement;
 
   componentDidMount() {
@@ -78,4 +78,4 @@ class Person extends Component<IProps> {
   }
 }
 
-export default Person;
+export default Hero;

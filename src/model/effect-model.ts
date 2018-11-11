@@ -1,7 +1,9 @@
-class Effect {
+import { PlayerType } from 'src/constants';
+
+class EffectModel {
   name: string;
   value: number;
-  target: string;
+  target: PlayerType;
 
   constructor(info: any) {
     this.name = info.name;
@@ -10,4 +12,4 @@ class Effect {
   }
 }
 
-export default Effect;
+export default EffectModel;

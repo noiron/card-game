@@ -17,12 +17,11 @@ const Wrapper = styled.div`
   padding-top: 40px;
 `;
 
-interface IProps {
-  status: 'win' | 'lose';
-  title: string;
+interface IGameOverProps {
+  status: GameStatusType;
 }
 
-class GameOver extends Component<IProps> {
+class GameOver extends Component<IGameOverProps> {
 
   render() {
 

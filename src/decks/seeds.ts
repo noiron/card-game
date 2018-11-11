@@ -1,7 +1,16 @@
 import { card_infos} from './infos';
 
+interface ISeed {
+  name: string;
+  desc: string;
+  attack: number;
+  armor: number;
+  positive: boolean;
+  extraInfo: string;
+}
+
 // 定义一组 seed，作为卡牌的属性，以此来生成 cardModel 
-const seedAttack1 = {
+const seedAttack1: ISeed = {
   name: '攻击',
   desc: '🐓',
   attack: 10,
@@ -10,7 +19,7 @@ const seedAttack1 = {
   extraInfo: card_infos.attack[0],
 };
 
-const seedAttack2 = {
+const seedAttack2: ISeed = {
   name: '攻击',
   desc: '⚔',
   attack: 1,
@@ -19,7 +28,7 @@ const seedAttack2 = {
   extraInfo: card_infos.attack[1],
 };
 
-const seedDefend1 = {
+const seedDefend1: ISeed = {
   name: '防御',
   desc: '🛡',
   attack: 0,
@@ -28,7 +37,7 @@ const seedDefend1 = {
   extraInfo: card_infos.defend[0],
 };
 
-const seedDefend2 = {
+const seedDefend2: ISeed = {
   name: '防御',
   desc: '🤺',
   attack: 0,
@@ -37,7 +46,12 @@ const seedDefend2 = {
   extraInfo: card_infos.defend[0],
 };
 
-const config = [
+interface IConfig {
+  seed: ISeed;
+  num: number;
+}
+
+const config: IConfig[] = [
   {
     seed: seedAttack1,
     num: 3,
@@ -57,8 +71,8 @@ const config = [
 ]
 
 // 一个配置对象，给定 seed 种类及数量，生成一个 seed 数组
-function generateSeeds(config) {
-  const result = [];
+function generateSeeds(config: IConfig[]) {
+  const result: ISeed[] = [];
 
   config.forEach(s => {
     for (let i = 0; i < s.num; i++) {

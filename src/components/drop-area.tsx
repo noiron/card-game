@@ -7,7 +7,7 @@ import { item_types } from '../constants';
 // import { toJS } from 'mobx';
 
 const dropTarget = {
-  drop(props: IProps, monitor: DropTargetMonitor) {
+  drop(props: IDropAreaProps, monitor: DropTargetMonitor) {
     const card = monitor.getItem();
     card.playCard();
     console.log('你出了一张牌');
@@ -15,22 +15,20 @@ const dropTarget = {
   }
 }
 
-interface IProps {
-  connectDropTarget: ConnectDropTarget;
-  canDrop: boolean;
-  isOver: boolean;
+interface IDropAreaProps {
+  // connectDropTarget?: ConnectDropTarget;
+  // canDrop?: boolean;
+  // isOver?: boolean;
+  children: JSX.Element[];
 }
 
-@DropTarget(
-  item_types.card,
-  dropTarget,
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    canDrop: monitor.canDrop(),
-    isOver: monitor.isOver(),
-  })
-)
-class DropArea extends React.Component<IProps> {
+export interface IDropAreaCollectedProps {
+	canDrop: boolean
+	isOver: boolean
+	connectDropTarget?: ConnectDropTarget
+}
+
+class DropArea extends React.Component<IDropAreaProps & IDropAreaCollectedProps> {
   render() {
     // eslint-disable-next-line
     const { connectDropTarget, canDrop, isOver } = this.props;
@@ -45,4 +43,12 @@ class DropArea extends React.Component<IProps> {
   }
 }
 
-export default DropArea;
+export default DropTarget<IDropAreaProps, IDropAreaCollectedProps>(
+  item_types.card,
+  dropTarget,
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    canDrop: monitor.canDrop(),
+    isOver: monitor.isOver(),
+  })
+)(DropArea);
