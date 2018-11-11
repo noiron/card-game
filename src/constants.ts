@@ -4,6 +4,8 @@ export interface IPlayer {
   monster: PlayerType,
 }
 
+export type GameStatusType = 'running' | 'win' | 'lose';
+
 // 当前属于谁的回合
 export const game_turn : IPlayer = {
   hero: 'hero',

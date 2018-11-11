@@ -45,10 +45,10 @@ const Wrapper = styled.div`
     }
 `;
 
-interface IProps {
+interface ICardViewProps {
   playCard: any;  // FIXME:
-  source: PlayerType;
-  isDragging: boolean;
+  source?: PlayerType;
+  isDragging?: boolean;
   name: string;
   desc: string;
   attack?: number;
@@ -60,12 +60,12 @@ interface IState {
   shouldShowInfo: boolean;
 }
 
-class CardView extends Component<IProps> {
+class CardView extends Component<ICardViewProps> {
   isMouseIn: boolean;
   state: IState;
   cardBorder: SVGSVGElement;
 
-  constructor(props: IProps) {
+  constructor(props: ICardViewProps) {
     super(props);
     this.state = {
       shouldShowInfo: false,

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, ReactInstance } from 'react';
 import styled from 'styled-components';
-import { PropTypes } from 'prop-types';
+// import { PropTypes } from 'prop-types';
 import rough from 'roughjs';
 
 const Wrapper = styled.div`
@@ -30,14 +30,25 @@ const Wrapper = styled.div`
   }
 `;
 
-class Monster extends Component {
+interface IProps {
+  life: number;
+  armor: number;
+  className?: string;
+}
+
+class Monster extends Component<IProps> {
+  monsterBorder: SVGSVGElement;
 
   componentDidMount() {
     this.setBorder();
   }
 
+  setBorderRef = (element: SVGSVGElement) => {
+    this.monsterBorder = element;
+  }
+
   setBorder = () => {
-    const svg = this.refs.monsterBorder;
+    const svg: SVGSVGElement = this.monsterBorder;
     const rc = rough.svg(svg);
     const strokeColor = '#000';
     const node = rc.rectangle(0, 0, 110, 110, {
@@ -45,7 +56,7 @@ class Monster extends Component {
       strokeWidth: 3,
       roughness: 2
     });
-    svg.appendChild(node);
+    (svg as any).appendChild(node);
   }
 
   render() {
@@ -53,7 +64,7 @@ class Monster extends Component {
 
     return (
       <Wrapper className={this.props.className}>
-        <svg ref={'monsterBorder'}></svg>
+        <svg ref={this.setBorderRef} />
         <p className="avatar">{
           // eslint-disable-next-line
           }<span>👹</span>
@@ -65,11 +76,9 @@ class Monster extends Component {
   }
 }
 
-Monster.propTypes = {
-  life: PropTypes.number.isRequired,
-  armor: PropTypes.number.isRequired,
-}
-
-
+// Monster.propTypes = {
+//   life: PropTypes.number.isRequired,
+//   armor: PropTypes.number.isRequired,
+// }
 
 export default Monster;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { run_status } from '../constants';
+import { run_status, GameStatusType } from '../constants';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -17,7 +17,12 @@ const Wrapper = styled.div`
   padding-top: 40px;
 `;
 
-class GameOver extends Component {
+interface IProps {
+  status: 'win' | 'lose';
+  title: string;
+}
+
+class GameOver extends Component<IProps> {
 
   render() {
 
@@ -27,19 +32,18 @@ class GameOver extends Component {
     return (
       <Wrapper>
         <h1>{title}</h1>
-        {/* <p>{content}</p> */}
         <button onClick={() => window.location.reload()}>一键销毁</button>
       </Wrapper>
     )
   }
 }
 
-GameOver.propTypes = {
-  title: PropTypes.string,
-  status: PropTypes.oneOf([
-    run_status.win,
-    run_status.lose
-  ]).isRequired,
-}
+// GameOver.propTypes = {
+//   title: PropTypes.string,
+//   status: PropTypes.oneOf([
+//     run_status.win,
+//     run_status.lose
+//   ]).isRequired,
+// }
 
 export default GameOver;

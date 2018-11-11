@@ -21,6 +21,7 @@
     "variable-name": false,
     "object-literal-sort-keys": false,
     "member-access": false,
-    "no-console": [false]
+    "no-console": [false],
+    "jsx-no-lambda": false
   }
 }

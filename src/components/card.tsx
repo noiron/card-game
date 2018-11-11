@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { DragSource } from 'react-dnd';
+import { DragSource, ConnectDragSource } from 'react-dnd';
 import { item_types } from '../constants';
 import CardView from './card-view';
 
 const cardSource = {
-  beginDrag(card) {
+  beginDrag(card: ICardProps) {
     console.log('begin drag: ');
     return ({ 
       id: card.id,
@@ -18,6 +18,18 @@ const cardSource = {
   // }
 }
 
+
+interface ICardProps {
+  connectDragSource: ConnectDragSource;
+  id: string;
+  name: string;
+  desc: string;
+  attack: number;
+  armor: number;
+  playCard: any;  // FIXME:
+  children: any;
+}
+
 @DragSource(
   item_types.card,
   cardSource,
@@ -26,7 +38,7 @@ const cardSource = {
     isDragging: monitor.isDragging(),
   })
 )
-class Card extends Component {
+class Card extends Component<ICardProps> {
 
   handleDoubleClick = () => {
     this.props.playCard();
@@ -44,11 +56,11 @@ class Card extends Component {
   }
 }
 
-Card.propTypes = {
-  name: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
-  attack: PropTypes.number,
-  armor: PropTypes.number,
-}
+// Card.propTypes = {
+//   name: PropTypes.string.isRequired,
+//   desc: PropTypes.string.isRequired,
+//   attack: PropTypes.number,
+//   armor: PropTypes.number,
+// }
 
 export default Card;
