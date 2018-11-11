@@ -5,13 +5,13 @@
 import CardModel from "../model/card-model";
 import seeds from './seeds';
 import * as utils from '../utils';
-import { card_target, card_source, game_turn, init_cards_num } from '../constants';
+import { card_target, card_source, game_turn, init_cards_num, PlayerType } from '../constants';
 import { observable, action, reaction } from 'mobx';
 import gameState from '../model/game-state-model';
 // import { toJS } from 'mobx';
 
 
-function generateCardFromSeed(source, seed) {
+function generateCardFromSeed(source: PlayerType, seed: any) {
   let target;
   if (source === card_source.hero) {
     target = seed.positive ? card_target.hero : card_target.monster;
@@ -28,13 +28,25 @@ function generateCardFromSeed(source, seed) {
   return card;
 }
 
-class Decks {
-  @observable heroDeck = [];  // 牌堆
-  @observable monsterDeck = [];
-  @observable heroHand = [];  // 手牌
-  @observable monsterHand = [];
-  @observable usedCards = []; // 所有使用过的卡牌
-  @observable currentCards = []; // 当前正在使用的卡牌
+export interface IDeck {
+  heroDeck: string[];
+  monsterDeck: CardModel[];
+  heroHand: CardModel[];  // 手牌
+  monsterHand: CardModel[];
+  usedCards: CardModel[]; // 所有使用过的卡牌
+  currentCards: CardModel[]; // 当前正在使用的卡牌
+  removeHeroCard: (id: string) => void;
+}
+
+
+
+export class Decks {
+  @observable heroDeck: CardModel[] = [];  // 牌堆
+  @observable monsterDeck: CardModel[] = [];
+  @observable heroHand: CardModel[] = [];  // 手牌
+  @observable monsterHand: CardModel[] = [];
+  @observable usedCards: CardModel[] = []; // 所有使用过的卡牌
+  @observable currentCards: CardModel[] = []; // 当前正在使用的卡牌
   
   @observable monsterUsedCardsCount = 0;
   @observable monsterTurnOver = false;
@@ -57,7 +69,7 @@ class Decks {
   }
 
   // 玩家出牌
-  @action removeHeroCard(id) {
+  @action removeHeroCard(id: string) {
     const card = this.heroHand.filter(card => card.id === id)[0];
     card.playedTime = new Date();
     this.usedCards.push(card);
@@ -66,7 +78,7 @@ class Decks {
   }
 
   // 敌人出牌
-  @action removeBossCard(id) {
+  @action removeBossCard(id: string) {
     // 当前处理方式为，敌人按顺序依次出牌
     const card = this.monsterHand[0];
     card.playedTime = new Date();
@@ -82,7 +94,7 @@ class Decks {
 
   // 给敌人发牌
   @action dealMonsterCards() {
-    if (this.monsterDeck.length < 2) return;
+    if (this.monsterDeck.length < 2) { return; }
     this.monsterHand.push(...this.monsterDeck.splice(0, 2));
   }
 

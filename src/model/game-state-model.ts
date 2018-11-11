@@ -2,13 +2,19 @@
  * 记录游戏的中的各种状态信息，如当前是谁的回合，游戏的输赢状态
  */
 import { observable, computed, action, autorun } from 'mobx';
-import { game_turn, run_status } from '../constants';
+import { game_turn, run_status, GameStatusType, PlayerType } from '../constants';
+import EffectModel from './effect-model';
 
-class GameState {
-  @observable currentTurn;  // 记录是玩家还是敌人的回合
-  @observable runStatus;
-  @observable effects;
-  @observable turnCount; // 记录当前是第几回合
+
+export interface IGameState {
+  currentTurn: PlayerType;
+}
+
+export class GameStateModel {
+  @observable currentTurn: PlayerType;  // 记录是玩家还是敌人的回合
+  @observable runStatus: GameStatusType;
+  @observable effects: EffectModel[];
+  @observable turnCount: number; // 记录当前是第几回合
   @observable showHistory = false;
 
   @computed get isGameOver() {
@@ -16,7 +22,7 @@ class GameState {
       || this.runStatus === run_status.lose;
   }
 
-  constructor(info) {
+  constructor(info: IGameState) {
     this.currentTurn = info.currentTurn;
     this.runStatus = run_status.running;
     this.effects = [];
@@ -28,7 +34,7 @@ class GameState {
   }
 }
 
-const gameState = new GameState({
+const gameState = new GameStateModel({
   currentTurn: game_turn.hero
 });
 

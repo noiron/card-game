@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Ref } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import rough from 'roughjs';
-import { card_source } from '../constants';
+import { card_source, PlayerType } from '../constants';
 import { delay } from '../utils';
 import CardDesc from './card-info';
 
@@ -46,16 +45,31 @@ const Wrapper = styled.div`
     }
 `;
 
-class CardView extends Component {
+interface ICardViewProps {
+  playCard: () => any;
+  source?: PlayerType;
+  isDragging?: boolean;
+  name: string;
+  desc: string;
+  attack?: number;
+  armor?: number;
+  extraInfo?: string;
+}
 
-  constructor(props) {
+interface IState {
+  shouldShowInfo: boolean;
+}
+
+class CardView extends Component<ICardViewProps> {
+  isMouseIn: boolean;
+  state: IState;
+  cardBorder: SVGSVGElement;
+
+  constructor(props: ICardViewProps) {
     super(props);
-    // let cardBorder = React.createRef();
-
     this.state = {
       shouldShowInfo: false,
-    }
-
+    };
     this.isMouseIn = false;
   }
   
@@ -69,7 +83,8 @@ class CardView extends Component {
   }
 
   setBorder = () => {
-    const svg = this.refs.cardBorder;
+    const svg: SVGSVGElement = this.cardBorder;
+
     const rc = rough.svg(svg);
     const strokeColor = this.props.source === card_source.monster
       ? 'red'
@@ -78,7 +93,7 @@ class CardView extends Component {
     const node = rc.rectangle(0, 0, 100, 130, {
       stroke: strokeColor
     });
-    svg.appendChild(node);
+    (svg as any).appendChild(node);
   }
 
   handleHover = () => {
@@ -86,7 +101,7 @@ class CardView extends Component {
 
     // 延时之后显示额外的卡牌说明信息
     delay(1000).then(() => {
-      if (!this.isMouseIn || this.props.isDragging) return;
+      if (!this.isMouseIn || this.props.isDragging) { return; }
       this.setState({ shouldShowInfo: true });
     })
   }
@@ -95,6 +110,10 @@ class CardView extends Component {
     this.setState({ shouldShowInfo: false });
     this.isMouseIn = false;
   }
+
+  setSvgRef = (element:SVGSVGElement) => {
+    this.cardBorder = element;
+  };
 
   render() {
     const { name, desc, attack, armor, source, isDragging, extraInfo } = this.props;
@@ -106,23 +125,16 @@ class CardView extends Component {
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleLeave}
       >
-        <svg className="card-border" ref={'cardBorder'}></svg>
+        <svg className="card-border" ref={this.setSvgRef} />
         <p className="name">{name}</p>
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
-        {attack > 0 && <p>攻击：{attack}</p>}
-        {armor >0  && <p>护甲：{armor}</p>}
+        {attack as number > 0 && <p>攻击：{attack}</p>}
+        {armor as number > 0  && <p>护甲：{armor}</p>}
 
         {(this.state.shouldShowInfo && !isDragging) && <CardDesc info={extraInfo} />}
       </Wrapper>
     )
   }
-}
-
-CardView.propTypes = {
-  name: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
-  attack: PropTypes.number,
-  armor: PropTypes.number,
 }
 
 export default CardView;

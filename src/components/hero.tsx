@@ -31,14 +31,26 @@ const Wrapper = styled.div`
   }
 `;
 
-class Person extends Component {
+interface IProps {
+  life: number;
+  maxLife: number;
+  armor: number;
+  className: string;
+}
+
+class Hero extends Component<IProps> {
+  heroBorder: SVGSVGElement;
 
   componentDidMount() {
     this.setBorder();
   }
 
+  setBorderRef = (element: SVGSVGElement) => {
+    this.heroBorder = element;
+  }
+
   setBorder = () => {
-    const svg = this.refs.heroBorder;
+    const svg: any = this.heroBorder;
     const rc = rough.svg(svg);
     const strokeColor = '#333 ';
     const node = rc.rectangle(0, 0, 130, 130, {
@@ -54,7 +66,7 @@ class Person extends Component {
 
     return (
       <Wrapper className={this.props.className}>
-        <svg className="hero-border" ref={'heroBorder'}></svg>
+        <svg className="hero-border" ref={this.setBorderRef} />
         <p className="avatar">{
         // eslint-disable-next-line
         }<span>🐒</span>
@@ -66,4 +78,4 @@ class Person extends Component {
   }
 }
 
-export default Person;
+export default Hero;

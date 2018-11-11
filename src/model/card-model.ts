@@ -1,5 +1,19 @@
+import { PlayerType } from 'src/constants';
+
 class CardModel {
-  constructor(info) {
+  id: string;
+  name: string;
+  desc: string;
+  attack: number;
+  armor: number;
+  positive: boolean;
+  target: PlayerType;
+  source: PlayerType;
+  extraInfo: string;
+  playedTime: Date | null;
+
+
+  constructor(info: any) {
     this.id = info.id;
     this.name = info.name;
     this.desc = info.desc;
@@ -11,8 +25,6 @@ class CardModel {
     this.extraInfo = info.extraInfo;
     this.playedTime = null;
   }
-
-
 }
 
 export default CardModel;

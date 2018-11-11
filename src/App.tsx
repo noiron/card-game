@@ -16,19 +16,31 @@ import { card_target, game_turn, run_status } from './constants';
 import config from './config';
 // import { toJS } from 'mobx';
 import rough from 'roughjs';
+import { GameStateModel } from './model/game-state-model';
+import CardModel from './model/card-model';
+import HeroModel from './model/hero-model';
+import MonsterModel from './model/monster-model';
+import { Decks } from './decks';
 
 const game_board_width = 700;
 const game_board_height = 500;
 
+interface IProps {
+  gameState: GameStateModel;
+  decks: Decks;
+  hero: HeroModel;
+  boss: MonsterModel;
+}
+
 @observer
-class App extends Component {
+class App extends Component<IProps> {
 
   componentDidMount() {
     setBackground();
   }
 
   // 玩家出牌
-  playCard = (id) => {
+  playCard = (id: string) => {
     const { gameState, decks } = this.props;
     if (gameState.currentTurn !== game_turn.hero) {
       return;
@@ -40,13 +52,13 @@ class App extends Component {
     decks.removeHeroCard(id);
   }
 
-  calculateCardEffect = (currentCard) => {
+  calculateCardEffect = (currentCard: CardModel) => {
     const { hero, boss, gameState } = this.props;
 
     // 出牌效果
     let effectName;
     let effectValue = 0;
-    let effect = null;
+    let effect: EffectModel = null;
 
     if (currentCard.name === '攻击') {
       effectName = '生命值';
@@ -118,7 +130,7 @@ class App extends Component {
 
     monsterHand.forEach((card, index) => {
       setTimeout(() => {
-        if (gameState.isGameOver) return;
+        if (gameState.isGameOver) { return; }
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id);
         if (index >= monsterHand.length - 1) {
@@ -133,7 +145,7 @@ class App extends Component {
   showRunStatus() {
     const { runStatus, isGameOver } = this.props.gameState;
 
-    if (runStatus === run_status.running) return null;
+    if (runStatus === run_status.running) { return null; }
 
     if (isGameOver) {
       return <GameOver status={runStatus} />
@@ -153,7 +165,7 @@ class App extends Component {
 
     return (
       <Wrapper className="App">
-        <Background id="svg-background"></Background>
+        <Background id="svg-background" />
         <TurnFlag>
           第{gameState.turnCount}回合{'  '}  
           {gameState.currentTurn === game_turn.hero ? '你的' : '对手的'}回合
@@ -169,18 +181,17 @@ class App extends Component {
 
           <Dustbin>
             {
-              currentCards.map((card, index) => {
+              currentCards.map((card) => {
                 return <CardView
                   name={card.name}
                   desc={card.desc}
                   attack={card.attack}
                   armor={card.armor}
-                  index={index}
                   source={card.source}
-                  playCard={() => {}}
+                  playCard={() => { return; }}
                   extraInfo={card.extraInfo}
                   key={card.id}
-                ></CardView>
+                />
               })
             }
           </Dustbin>
@@ -199,7 +210,7 @@ class App extends Component {
               return <Card
                 name={card.name}
                 id={card.id}
-                index={index}
+                // index={index}
                 desc={card.desc}
                 attack={card.attack}
                 armor={card.armor}
@@ -207,7 +218,7 @@ class App extends Component {
                 extraInfo={card.extraInfo}
                 playCard={() => this.playCard(card.id)}
                 key={card.id}
-              ></Card>
+              />
             })
           }
           </div>
@@ -251,19 +262,19 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  hero: MobxPropTypes.observableObject.isRequired,
-  boss: MobxPropTypes.observableObject.isRequired,
-  decks: MobxPropTypes.observableObject.isRequired,
-  gameState: MobxPropTypes.observableObject.isRequired,
-}
+// App.propTypes = {
+//   hero: MobxPropTypes.observableObject.isRequired,
+//   boss: MobxPropTypes.observableObject.isRequired,
+//   decks: MobxPropTypes.observableObject.isRequired,
+//   gameState: MobxPropTypes.observableObject.isRequired,
+// }
 
 export default App;
 
 function setBackground() {
-  const svgBg = document.getElementById('svg-background');
+  const svgBg: any = document.getElementById('svg-background');
   const rc = rough.svg(svgBg);
-  let node = rc.rectangle(10, 10, 740, 540, {
+  const node = rc.rectangle(10, 10, 740, 540, {
     roughness: 1.5
   });
   svgBg.appendChild(node);
