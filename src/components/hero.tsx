@@ -35,6 +35,7 @@ interface IProps {
   life: number;
   maxLife: number;
   armor: number;
+  mana: number;
   className: string;
 }
 
@@ -62,7 +63,7 @@ class Hero extends Component<IProps> {
   }
 
   render() {
-    const { life, maxLife, armor } = this.props;
+    const { life, maxLife, armor, mana } = this.props;
 
     return (
       <Wrapper className={this.props.className}>
@@ -73,6 +74,7 @@ class Hero extends Component<IProps> {
         </p>
         <p>生命值：{`${life} / ${maxLife}`}</p>
         <p>护甲：{`${armor|| 0}`}</p>
+        <p>法力：{`${mana}`}</p>
       </Wrapper>
     )
   }

@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import rough from 'roughjs';
 
 const Wrapper = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   /* border: 2px solid #aaa; */
   /* border-radius: 5px; */
   font-size: 12px;
@@ -33,6 +33,7 @@ const Wrapper = styled.div`
 interface IProps {
   life: number;
   armor: number;
+  mana: number;
   className?: string;
 }
 
@@ -51,7 +52,7 @@ class Monster extends Component<IProps> {
     const svg: SVGSVGElement = this.monsterBorder;
     const rc = rough.svg(svg);
     const strokeColor = '#000';
-    const node = rc.rectangle(0, 0, 110, 110, {
+    const node = rc.rectangle(0, 0, 130, 130, {
       stroke: strokeColor,
       strokeWidth: 3,
       roughness: 2
@@ -60,7 +61,7 @@ class Monster extends Component<IProps> {
   }
 
   render() {
-    const { life, armor } = this.props;
+    const { life, armor, mana } = this.props;
 
     return (
       <Wrapper className={this.props.className}>
@@ -71,6 +72,7 @@ class Monster extends Component<IProps> {
         </p>
         <p>生命值：{`${life}`}</p>
         <p>护甲：{`${armor|| 0}`}</p>
+        <p>法力：{`${mana}`}</p>
       </Wrapper>
     )
   }

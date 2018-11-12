@@ -6,6 +6,7 @@ class CardModel {
   desc: string;
   attack: number;
   armor: number;
+  mana: number;
   positive: boolean;
   target: PlayerType;
   source: PlayerType;
@@ -24,6 +25,7 @@ class CardModel {
     this.source = info.source;
     this.extraInfo = info.extraInfo;
     this.playedTime = null;
+    this.mana = info.mana;
   }
 }
 

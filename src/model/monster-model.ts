@@ -14,7 +14,7 @@ class Monster {
   constructor(info: IMonster) {
     this.life = info.life;
     this.armor = info.armor;
-    this.mana = info.mana;
+    this.mana = info.mana || 5;
   }
 
   // 受到伤害

@@ -197,6 +197,7 @@ class App extends Component<IProps> {
             <Monster
               life={boss.life}
               armor={boss.armor}
+              mana={boss.mana}
             />
           </EnemyArea>
 
@@ -204,13 +205,8 @@ class App extends Component<IProps> {
             {
               currentCards.map((card) => {
                 return <CardView
-                  name={card.name}
-                  desc={card.desc}
-                  attack={card.attack}
-                  armor={card.armor}
-                  source={card.source}
+                  {...card}
                   playCard={() => { return; }}
-                  extraInfo={card.extraInfo}
                   key={card.id}
                 />
               })
@@ -223,20 +219,14 @@ class App extends Component<IProps> {
             life={hero.life}
             armor={hero.armor}
             maxLife={hero.maxLife}
+            mana={hero.mana}
             className="person"
           />
           <div className="card-list">
           {
             decks.heroHand.map((card, index) => {
               return <Card
-                name={card.name}
-                id={card.id}
-                // index={index}
-                desc={card.desc}
-                attack={card.attack}
-                armor={card.armor}
-                source={card.source}
-                extraInfo={card.extraInfo}
+                {...card}
                 playCard={() => this.playCard(card.id)}
                 key={card.id}
               />

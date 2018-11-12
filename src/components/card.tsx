@@ -26,6 +26,7 @@ interface ICardProps {
   attack: number;
   source: PlayerType;
   armor: number;
+  mana: number;
   playCard: () => any;
   children?: any;
   extraInfo: string;
