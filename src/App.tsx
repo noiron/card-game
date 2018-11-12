@@ -13,7 +13,7 @@ import DropArea from './components/drop-area';
 import History from './components/history';
 import NextTurn from './components/next-turn';
 
-import { card_target, game_turn, run_status } from './constants';
+import { card_target, game_turn, run_status, card_source } from './constants';
 import config from './config';
 // import { toJS } from 'mobx';
 import rough from 'roughjs';
@@ -113,6 +113,18 @@ class App extends Component<IProps> {
     }
   }
 
+  calculateCardUsable = (card: CardModel) => {
+    const { source, mana } = card;
+    if (source === card_source.hero) {
+      // 来源于玩家的牌
+      const { hero } = this.props;
+      return hero.mana >= mana;
+    }
+
+    const { boss } = this.props;
+    return boss.mana >= mana;
+  }
+
   nextTurn = () => {
     const { gameState } = this.props;
     // TODO: 利用 reaction 来检查 currentTurn 的改变，自动触发
@@ -165,13 +177,10 @@ class App extends Component<IProps> {
 
   showRunStatus() {
     const { runStatus, isGameOver } = this.props.gameState;
-
-    if (runStatus === run_status.running) { return null; }
-
     if (isGameOver) {
       return <GameOver status={runStatus} />
     }
-
+    // if (runStatus === run_status.running) { return null; }
     return null;
   }
 
@@ -225,10 +234,13 @@ class App extends Component<IProps> {
           <div className="card-list">
           {
             decks.heroHand.map((card, index) => {
+              const usable = this.calculateCardUsable(card);
+
               return <Card
                 {...card}
                 playCard={() => this.playCard(card.id)}
                 key={card.id}
+                usable={usable}
               />
             })
           }

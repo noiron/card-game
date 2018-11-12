@@ -16,7 +16,7 @@ const seedAttack1: ISeed = {
   desc: '🐓',
   attack: 10,
   armor: 0,
-  mana: 2,
+  mana: 6,
   positive: false,
   extraInfo: card_infos.attack[0],
 };

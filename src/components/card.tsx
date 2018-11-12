@@ -9,7 +9,8 @@ const cardSource = {
     console.log('begin drag: ');
     return ({ 
       id: card.id,
-      playCard: card.playCard
+      playCard: card.playCard,
+      usable: card.usable,
     })
   },
 
@@ -30,6 +31,7 @@ interface ICardProps {
   playCard: () => any;
   children?: any;
   extraInfo: string;
+  usable: boolean;
 }
 
 interface ICardCollectedProps {

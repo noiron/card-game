@@ -16,6 +16,11 @@ const Wrapper = styled.div`
   /* border-radius: 8px; */
   cursor: move;
   position: relative;
+  opacity: 0.5;
+
+  &.can-use {
+    opacity: 1;
+  }
 
   .card-border {
     /* svg 的尺寸要设置的略大于父容器 */
@@ -54,6 +59,7 @@ interface ICardViewProps {
   armor?: number;
   mana: number;
   extraInfo?: string;
+  usable?: boolean;
 }
 
 interface IState {
@@ -116,12 +122,13 @@ class CardView extends Component<ICardViewProps> {
   };
 
   render() {
-    const { name, desc, attack, armor, source, isDragging, extraInfo, mana } 
+    const { name, desc, attack, armor, source, isDragging, extraInfo, mana, 
+      usable=true } 
       = this.props;
 
     return (
       <Wrapper 
-        className={classNames('card', source, { 'is-dragging': isDragging})}  
+        className={classNames('card', source, { 'is-dragging': isDragging, 'can-use': usable})}  
         onDoubleClick={this.handleDoubleClick}
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleLeave}

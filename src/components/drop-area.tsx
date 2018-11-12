@@ -9,8 +9,10 @@ import { item_types } from '../constants';
 const dropTarget = {
   drop(props: IDropAreaProps, monitor: DropTargetMonitor) {
     const card = monitor.getItem();
-    card.playCard();
-    console.log('你出了一张牌');
+    if (card.usable) {
+      card.playCard();
+      console.log('你出了一张牌');
+    }
     return { name: 'card' }
   }
 }
