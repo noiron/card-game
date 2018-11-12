@@ -15,6 +15,11 @@ const Wrapper = styled.div`
   color: greenyellow;
   user-select: none;
   padding-top: 40px;
+
+  h1 {
+    margin-top: 200px;
+    color: lightgray;
+  }
 `;
 
 interface IGameOverProps {

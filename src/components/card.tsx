@@ -44,7 +44,7 @@ class Card extends Component<ICardProps & ICardCollectedProps> {
     const { connectDragSource, ...cardProps } = this.props;
 
     return (
-      connectDragSource && connectDragSource(<div>
+      connectDragSource && connectDragSource(<div className="card">
         <CardView {...cardProps} />
       </div>
       )

@@ -357,7 +357,8 @@ const PlayerCardsArea = styled.div`
   position: relative;
 
   .card {
-    margin-right: 15px;
+    margin-right: 10px;
+    margin-bottom: 5px;
   }
 
   .person {
