@@ -16,6 +16,7 @@ export class GameStateModel {
   @observable effects: EffectModel[];
   @observable turnCount: number; // 记录当前是第几回合
   @observable showHistory = false;
+  @observable showNextTurnTip = false;
 
   @computed get isGameOver() {
     return this.runStatus === run_status.win 
@@ -31,6 +32,14 @@ export class GameStateModel {
 
   @action increaseTurnCount() {
     this.turnCount += 1;
+  }
+
+  // 切换回合时，浮窗提示
+  @action toggleNextTurnTip() {
+    this.showNextTurnTip = true;
+    setTimeout(() => {
+      this.showNextTurnTip = false;
+    }, 1500);
   }
 }
 

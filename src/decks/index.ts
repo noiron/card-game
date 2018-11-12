@@ -106,6 +106,7 @@ reaction(
   (isOver, reaction)  => {
     if (isOver) {
       gameState.currentTurn = game_turn.hero;
+      gameState.toggleNextTurnTip();
       gameState.increaseTurnCount();
       decks.monsterTurnOver = false;
       decks.dealCards();

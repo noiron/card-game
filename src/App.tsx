@@ -11,6 +11,7 @@ import GameOver from './components/game-over';
 import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
 import History from './components/history';
+import NextTurn from './components/next-turn';
 
 import { card_target, game_turn, run_status } from './constants';
 import config from './config';
@@ -114,8 +115,13 @@ class App extends Component<IProps> {
 
   nextTurn = () => {
     const { gameState } = this.props;
+    // TODO: 利用 reaction 来检查 currentTurn 的改变，自动触发
     gameState.currentTurn = game_turn.monster;
-    this.bossStartAction();
+    gameState.toggleNextTurnTip();
+    // 当切换回合的 tip 消失后，开始执行对手的操作
+    delay(1500).then(() => {
+      this.bossStartAction();
+    });
   }
 
   bossStartAction() {
@@ -124,8 +130,11 @@ class App extends Component<IProps> {
     const { monsterHand } = decks;
 
     // 检查双方是否都没有牌了，是的话则比较双方血量，游戏结束
-    if (decks.heroHand.length === 0 && decks.monsterHand.length === 0) {
+    if (decks.heroHand.length === 0 && decks.monsterHand.length === 0 &&
+      decks.heroDeck.length === 0 && decks.monsterDeck.length === 0
+    ) {
       gameState.runStatus = (boss.life < hero.life) ? run_status.win : run_status.lose;
+      return;
     }
 
     // 非第一回合时，给敌人发两张牌
@@ -269,6 +278,8 @@ class App extends Component<IProps> {
         }
 
         {this.showRunStatus()}
+
+        {gameState.showNextTurnTip && <NextTurn turn={gameState.currentTurn} />}
       </Wrapper>
     );
   }
