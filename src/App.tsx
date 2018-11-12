@@ -21,6 +21,7 @@ import CardModel from './model/card-model';
 import HeroModel from './model/hero-model';
 import MonsterModel from './model/monster-model';
 import { Decks } from './decks';
+import { delay } from './utils';
 
 const game_board_width = 700;
 const game_board_height = 500;
@@ -119,13 +120,25 @@ class App extends Component<IProps> {
 
   bossStartAction() {
     // boss 依次发牌
-    const { decks, gameState } = this.props;
+    const { decks, gameState, boss, hero } = this.props;
     const { monsterHand } = decks;
 
+    // 检查双方是否都没有牌了，是的话则比较双方血量，游戏结束
+    if (decks.heroHand.length === 0 && decks.monsterHand.length === 0) {
+      gameState.runStatus = (boss.life < hero.life) ? run_status.win : run_status.lose;
+    }
 
     // 非第一回合时，给敌人发两张牌
     if (gameState.turnCount > 1) {
       decks.dealMonsterCards();
+    }
+
+    const len = monsterHand.length;
+    if (len === 0) {
+      delay(2000).then(() => {
+        decks.monsterTurnOver = true;
+      })
+      return;
     }
 
     monsterHand.forEach((card, index) => {
@@ -133,11 +146,10 @@ class App extends Component<IProps> {
         if (gameState.isGameOver) { return; }
         this.calculateCardEffect(card);
         decks.removeBossCard(card.id);
-        if (index >= monsterHand.length - 1) {
+        if (index >= len - 1) {
           decks.monsterTurnOver = true;
         }
-
-      }, index * 1000);
+      }, (index + 1) * 1000);
     })
 
   }

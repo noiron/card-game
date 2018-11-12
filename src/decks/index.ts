@@ -38,8 +38,6 @@ export interface IDeck {
   removeHeroCard: (id: string) => void;
 }
 
-
-
 export class Decks {
   @observable heroDeck: CardModel[] = [];  // 牌堆
   @observable monsterDeck: CardModel[] = [];
@@ -94,8 +92,8 @@ export class Decks {
 
   // 给敌人发牌
   @action dealMonsterCards() {
-    if (this.monsterDeck.length < 2) { return; }
-    this.monsterHand.push(...this.monsterDeck.splice(0, 2));
+    const cardsNum = Math.min(this.monsterDeck.length, 3);
+    this.monsterHand.push(...this.monsterDeck.splice(0, cardsNum));
   }
 
 }
@@ -113,7 +111,7 @@ reaction(
       decks.dealCards();
       decks.currentCards = [];
     }
-  }, { delay: 4000 }
+  }, { delay: 3000 }
 )
 
 export default decks;
