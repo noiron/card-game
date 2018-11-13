@@ -31,6 +31,12 @@ class Monster {
     this.armor += value;
   }
 
+  // 初始化这一回合的数据
+  initThisTurn() {
+    // TODO: 每回合回复法力值需要写入配置
+    this.mana += 2;
+  }
+
 }
 
 export default Monster;

@@ -34,6 +34,11 @@ class Hero {
   addArmor(value: number) {
     this.armor += value;
   }
+
+  initThisTurn() {
+    // 这个值需写入配置文件中
+    this.mana += 2;
+  }
 }
 
 export default Hero;

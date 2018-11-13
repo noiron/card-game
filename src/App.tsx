@@ -31,7 +31,7 @@ interface IProps {
   gameState: GameStateModel;
   decks: Decks;
   hero: HeroModel;
-  boss: MonsterModel;
+  monster: MonsterModel;
 }
 
 @observer
@@ -55,7 +55,7 @@ class App extends Component<IProps> {
   }
 
   calculateCardEffect = (currentCard: CardModel) => {
-    const { hero, boss, gameState } = this.props;
+    const { hero, monster, gameState } = this.props;
 
     // 出牌效果
     let effectName;
@@ -73,12 +73,12 @@ class App extends Component<IProps> {
       });
 
       if (currentCard.target === card_target.monster) {
-        boss.receiveAttack(currentCard.attack);
+        monster.receiveAttack(currentCard.attack);
       } else {
         hero.receiveAttack(currentCard.attack);
       }
 
-      if (boss.life <= 0) {
+      if (monster.life <= 0) {
         gameState.runStatus = run_status.win;
       } else if (hero.life <= 0) {
         gameState.runStatus = run_status.lose;
@@ -97,7 +97,7 @@ class App extends Component<IProps> {
       if (currentCard.target === card_target.hero) {
         hero.addArmor(effectValue);
       } else {
-        boss.addArmor(effectValue);
+        monster.addArmor(effectValue);
       }
     }
 
@@ -121,8 +121,8 @@ class App extends Component<IProps> {
       return hero.mana >= mana;
     }
 
-    const { boss } = this.props;
-    return boss.mana >= mana;
+    const { monster } = this.props;
+    return monster.mana >= mana;
   }
 
   nextTurn = () => {
@@ -132,37 +132,42 @@ class App extends Component<IProps> {
     gameState.toggleNextTurnTip();
     // 当切换回合的 tip 消失后，开始执行对手的操作
     delay(1500).then(() => {
-      this.bossStartAction();
+      this.monsterStartAction();
     });
   }
 
-  bossStartAction() {
+  monsterStartAction() {
     // boss 依次发牌
-    const { decks, gameState, boss, hero } = this.props;
+    const { decks, gameState, monster, hero } = this.props;
     const { monsterHand } = decks;
 
     // 检查双方是否都没有牌了，是的话则比较双方血量，游戏结束
     if (decks.heroHand.length === 0 && decks.monsterHand.length === 0 &&
       decks.heroDeck.length === 0 && decks.monsterDeck.length === 0
     ) {
-      gameState.runStatus = (boss.life < hero.life) ? run_status.win : run_status.lose;
+      gameState.runStatus = (monster.life < hero.life) ? run_status.win : run_status.lose;
       return;
     }
+
+    monster.initThisTurn();
 
     // 非第一回合时，给敌人发两张牌
     if (gameState.turnCount > 1) {
       decks.dealMonsterCards();
     }
-
-    const len = monsterHand.length;
+    
+    // 筛选出可用的卡牌
+    // FIXME: 只考虑了一张卡牌的法力值消耗
+    const availableCards = monsterHand.filter(card => this.calculateCardUsable(card));
+    const len = availableCards.length;
     if (len === 0) {
       delay(2000).then(() => {
         decks.monsterTurnOver = true;
       })
       return;
     }
-
-    monsterHand.forEach((card, index) => {
+    
+    availableCards.forEach((card, index) => {
       setTimeout(() => {
         if (gameState.isGameOver) { return; }
         this.calculateCardEffect(card);
@@ -190,7 +195,7 @@ class App extends Component<IProps> {
   }
 
   render() {
-    const { hero, boss, decks, gameState } = this.props;
+    const { hero, monster, decks, gameState } = this.props;
     const { usedCards, currentCards } = decks;
 
     return (
@@ -204,9 +209,9 @@ class App extends Component<IProps> {
         <DropArea>
           <EnemyArea>
             <Monster
-              life={boss.life}
-              armor={boss.armor}
-              mana={boss.mana}
+              life={monster.life}
+              armor={monster.armor}
+              mana={monster.mana}
             />
           </EnemyArea>
 
