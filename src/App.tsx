@@ -79,9 +79,9 @@ class App extends Component<IProps> {
       }
 
       if (monster.life <= 0) {
-        gameState.runStatus = run_status.win;
+        delay(1000).then(() => gameState.runStatus = run_status.win);
       } else if (hero.life <= 0) {
-        gameState.runStatus = run_status.lose;
+        delay(1000).then(() => gameState.runStatus = run_status.lose);
       }
 
     } else if (currentCard.name === '防御') {
@@ -139,7 +139,6 @@ class App extends Component<IProps> {
   monsterStartAction() {
     // boss 依次发牌
     const { decks, gameState, monster, hero } = this.props;
-    const { monsterHand } = decks;
 
     // 检查双方是否都没有牌了，是的话则比较双方血量，游戏结束
     if (decks.heroHand.length === 0 && decks.monsterHand.length === 0 &&
@@ -155,30 +154,41 @@ class App extends Component<IProps> {
     if (gameState.turnCount > 1) {
       decks.dealMonsterCards();
     }
-    
-    // 筛选出可用的卡牌
-    // FIXME: 只考虑了一张卡牌的法力值消耗
-    const availableCards = monsterHand.filter(card => this.calculateCardUsable(card));
-    const len = availableCards.length;
-    if (len === 0) {
-      delay(2000).then(() => {
-        decks.monsterTurnOver = true;
-      })
-      return;
-    }
-    
-    availableCards.forEach((card, index) => {
-      setTimeout(() => {
-        if (gameState.isGameOver) { return; }
-        this.calculateCardEffect(card);
-        decks.removeBossCard(card.id);
-        if (index >= len - 1) {
-          decks.monsterTurnOver = true;
-        }
-      }, (index + 1) * 1000);
-    })
-
+  
+    this.delayAndUseCard();
   }
+
+  delayAndUseCard = () => {
+    const { decks, gameState } = this.props;
+    const { monsterHand } = decks;
+    if (gameState.isGameOver) { return; }
+
+    let index = 0;
+    delay(1000).then(() => {
+      if (gameState.isGameOver) { return; }
+      
+      if (monsterHand.length === 0) {
+        decks.monsterTurnOver = true;
+        return;
+      }
+
+      let card = monsterHand[index];
+      while (index < monsterHand.length && !this.calculateCardUsable(monsterHand[index])) {
+        index++;
+      }
+      if (index > monsterHand.length - 1) {
+        decks.monsterTurnOver = true;
+        return;
+      }
+
+      card = monsterHand[index];
+      this.calculateCardEffect(card);
+      decks.removeBossCard(card.id);
+
+      this.delayAndUseCard();
+  })
+
+}
 
   showRunStatus() {
     const { runStatus, isGameOver } = this.props.gameState;
