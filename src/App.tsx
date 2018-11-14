@@ -13,7 +13,7 @@ import DropArea from './components/drop-area';
 import History from './components/history';
 import NextTurn from './components/next-turn';
 
-import { card_target, game_turn, run_status } from './constants';
+import { card_target, game_turn, run_status, card_source } from './constants';
 import config from './config';
 // import { toJS } from 'mobx';
 import rough from 'roughjs';
@@ -31,7 +31,7 @@ interface IProps {
   gameState: GameStateModel;
   decks: Decks;
   hero: HeroModel;
-  boss: MonsterModel;
+  monster: MonsterModel;
 }
 
 @observer
@@ -55,7 +55,7 @@ class App extends Component<IProps> {
   }
 
   calculateCardEffect = (currentCard: CardModel) => {
-    const { hero, boss, gameState } = this.props;
+    const { hero, monster, gameState } = this.props;
 
     // 出牌效果
     let effectName;
@@ -73,15 +73,15 @@ class App extends Component<IProps> {
       });
 
       if (currentCard.target === card_target.monster) {
-        boss.receiveAttack(currentCard.attack);
+        monster.receiveAttack(currentCard.attack);
       } else {
         hero.receiveAttack(currentCard.attack);
       }
 
-      if (boss.life <= 0) {
-        gameState.runStatus = run_status.win;
+      if (monster.life <= 0) {
+        delay(1000).then(() => gameState.runStatus = run_status.win);
       } else if (hero.life <= 0) {
-        gameState.runStatus = run_status.lose;
+        delay(1000).then(() => gameState.runStatus = run_status.lose);
       }
 
     } else if (currentCard.name === '防御') {
@@ -97,7 +97,7 @@ class App extends Component<IProps> {
       if (currentCard.target === card_target.hero) {
         hero.addArmor(effectValue);
       } else {
-        boss.addArmor(effectValue);
+        monster.addArmor(effectValue);
       }
     }
 
@@ -113,6 +113,18 @@ class App extends Component<IProps> {
     }
   }
 
+  calculateCardUsable = (card: CardModel) => {
+    const { source, mana } = card;
+    if (source === card_source.hero) {
+      // 来源于玩家的牌
+      const { hero } = this.props;
+      return hero.mana >= mana;
+    }
+
+    const { monster } = this.props;
+    return monster.mana >= mana;
+  }
+
   nextTurn = () => {
     const { gameState } = this.props;
     // TODO: 利用 reaction 来检查 currentTurn 的改变，自动触发
@@ -120,58 +132,70 @@ class App extends Component<IProps> {
     gameState.toggleNextTurnTip();
     // 当切换回合的 tip 消失后，开始执行对手的操作
     delay(1500).then(() => {
-      this.bossStartAction();
+      this.monsterStartAction();
     });
   }
 
-  bossStartAction() {
+  monsterStartAction() {
     // boss 依次发牌
-    const { decks, gameState, boss, hero } = this.props;
-    const { monsterHand } = decks;
+    const { decks, gameState, monster, hero } = this.props;
 
     // 检查双方是否都没有牌了，是的话则比较双方血量，游戏结束
     if (decks.heroHand.length === 0 && decks.monsterHand.length === 0 &&
       decks.heroDeck.length === 0 && decks.monsterDeck.length === 0
     ) {
-      gameState.runStatus = (boss.life < hero.life) ? run_status.win : run_status.lose;
+      gameState.runStatus = (monster.life < hero.life) ? run_status.win : run_status.lose;
       return;
     }
+
+    monster.initThisTurn();
 
     // 非第一回合时，给敌人发两张牌
     if (gameState.turnCount > 1) {
       decks.dealMonsterCards();
     }
-
-    const len = monsterHand.length;
-    if (len === 0) {
-      delay(2000).then(() => {
-        decks.monsterTurnOver = true;
-      })
-      return;
-    }
-
-    monsterHand.forEach((card, index) => {
-      setTimeout(() => {
-        if (gameState.isGameOver) { return; }
-        this.calculateCardEffect(card);
-        decks.removeBossCard(card.id);
-        if (index >= len - 1) {
-          decks.monsterTurnOver = true;
-        }
-      }, (index + 1) * 1000);
-    })
-
+  
+    this.delayAndUseCard();
   }
+
+  delayAndUseCard = () => {
+    const { decks, gameState } = this.props;
+    const { monsterHand } = decks;
+    if (gameState.isGameOver) { return; }
+
+    let index = 0;
+    delay(1000).then(() => {
+      if (gameState.isGameOver) { return; }
+      
+      if (monsterHand.length === 0) {
+        decks.monsterTurnOver = true;
+        return;
+      }
+
+      let card = monsterHand[index];
+      while (index < monsterHand.length && !this.calculateCardUsable(monsterHand[index])) {
+        index++;
+      }
+      if (index > monsterHand.length - 1) {
+        decks.monsterTurnOver = true;
+        return;
+      }
+
+      card = monsterHand[index];
+      this.calculateCardEffect(card);
+      decks.removeBossCard(card.id);
+
+      this.delayAndUseCard();
+  })
+
+}
 
   showRunStatus() {
     const { runStatus, isGameOver } = this.props.gameState;
-
-    if (runStatus === run_status.running) { return null; }
-
     if (isGameOver) {
       return <GameOver status={runStatus} />
     }
-
+    // if (runStatus === run_status.running) { return null; }
     return null;
   }
 
@@ -181,7 +205,7 @@ class App extends Component<IProps> {
   }
 
   render() {
-    const { hero, boss, decks, gameState } = this.props;
+    const { hero, monster, decks, gameState } = this.props;
     const { usedCards, currentCards } = decks;
 
     return (
@@ -195,8 +219,9 @@ class App extends Component<IProps> {
         <DropArea>
           <EnemyArea>
             <Monster
-              life={boss.life}
-              armor={boss.armor}
+              life={monster.life}
+              armor={monster.armor}
+              mana={monster.mana}
             />
           </EnemyArea>
 
@@ -204,13 +229,8 @@ class App extends Component<IProps> {
             {
               currentCards.map((card) => {
                 return <CardView
-                  name={card.name}
-                  desc={card.desc}
-                  attack={card.attack}
-                  armor={card.armor}
-                  source={card.source}
+                  {...card}
                   playCard={() => { return; }}
-                  extraInfo={card.extraInfo}
                   key={card.id}
                 />
               })
@@ -223,22 +243,19 @@ class App extends Component<IProps> {
             life={hero.life}
             armor={hero.armor}
             maxLife={hero.maxLife}
+            mana={hero.mana}
             className="person"
           />
           <div className="card-list">
           {
             decks.heroHand.map((card, index) => {
+              const usable = this.calculateCardUsable(card);
+
               return <Card
-                name={card.name}
-                id={card.id}
-                // index={index}
-                desc={card.desc}
-                attack={card.attack}
-                armor={card.armor}
-                source={card.source}
-                extraInfo={card.extraInfo}
+                {...card}
                 playCard={() => this.playCard(card.id)}
                 key={card.id}
+                usable={usable}
               />
             })
           }

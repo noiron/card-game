@@ -8,6 +8,7 @@ import * as utils from '../utils';
 import { card_target, card_source, game_turn, init_cards_num, PlayerType } from '../constants';
 import { observable, action, reaction } from 'mobx';
 import gameState from '../model/game-state-model';
+import { hero, monster } from 'src';
 // import { toJS } from 'mobx';
 
 
@@ -72,16 +73,19 @@ export class Decks {
     card.playedTime = new Date();
     this.usedCards.push(card);
     this.currentCards.push(card);
+    hero.mana -= card.mana;
     this.heroHand = this.heroHand.filter(card => card.id !== id);
   }
 
   // 敌人出牌
   @action removeBossCard(id: string) {
     // 当前处理方式为，敌人按顺序依次出牌
-    const card = this.monsterHand[0];
+    const card = this.monsterHand.filter(card => card.id === id)[0];
+
     card.playedTime = new Date();
     this.usedCards.push(card);
-    this.currentCards.push(this.monsterHand[0])
+    this.currentCards.push(card);
+    monster.mana -= card.mana;
     this.monsterHand = this.monsterHand.filter(card => card.id !== id);
   }
 
@@ -110,6 +114,9 @@ reaction(
       gameState.increaseTurnCount();
       decks.monsterTurnOver = false;
       decks.dealCards();
+      // 玩家回合开始时计算初始数据
+      hero.initThisTurn();
+
       decks.currentCards = [];
     }
   }, { delay: 3000 }

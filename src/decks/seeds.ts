@@ -5,6 +5,7 @@ interface ISeed {
   desc: string;
   attack: number;
   armor: number;
+  mana: number;
   positive: boolean;
   extraInfo: string;
 }
@@ -15,6 +16,7 @@ const seedAttack1: ISeed = {
   desc: '🐓',
   attack: 10,
   armor: 0,
+  mana: 6,
   positive: false,
   extraInfo: card_infos.attack[0],
 };
@@ -24,6 +26,7 @@ const seedAttack2: ISeed = {
   desc: '⚔',
   attack: 1,
   armor: 0,
+  mana: 2,
   positive: false,
   extraInfo: card_infos.attack[1],
 };
@@ -33,6 +36,7 @@ const seedDefend1: ISeed = {
   desc: '🛡',
   attack: 0,
   armor: 1,
+  mana: 2,
   positive: true,
   extraInfo: card_infos.defend[0],
 };
@@ -42,6 +46,7 @@ const seedDefend2: ISeed = {
   desc: '🤺',
   attack: 0,
   armor: 5,
+  mana: 2,
   positive: true,
   extraInfo: card_infos.defend[0],
 };
@@ -90,10 +95,6 @@ export default {
   heroSeeds,
   monsterSeeds,
 };
-
-
-// export const heroSeeds = [seed0, seed1, seed2, seed3];
-// export const monsterSeeds = [seed0, seed1, seed1];
 
 // 游戏规则：
 // 双方各有十张牌，每次各发两张牌

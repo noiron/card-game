@@ -11,14 +11,14 @@ import './index.css';
 import decks from './decks';
 import gameState from './model/game-state-model';
 
-const hero = new HeroModel({ life: 50, armor: 0 });
-const boss = new MonsterModel({ life: 50, armor: 0 });
+export const hero = new HeroModel({ life: 20, armor: 0, mana: 10 });
+export const monster = new MonsterModel({ life: 20, armor: 0, mana: 10 });
 
 ReactDOM.render(
   <DragDropContextProvider backend={HTML5Backend}>
     <App
       hero={hero}
-      boss={boss}
+      monster={monster}
       decks={decks}
       gameState={gameState}
     />

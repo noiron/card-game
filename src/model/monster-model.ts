@@ -14,7 +14,7 @@ class Monster {
   constructor(info: IMonster) {
     this.life = info.life;
     this.armor = info.armor;
-    this.mana = info.mana;
+    this.mana = info.mana || 5;
   }
 
   // 受到伤害
@@ -29,6 +29,12 @@ class Monster {
 
   addArmor(value: number) {
     this.armor += value;
+  }
+
+  // 初始化这一回合的数据
+  initThisTurn() {
+    // TODO: 每回合回复法力值需要写入配置
+    this.mana += 2;
   }
 
 }

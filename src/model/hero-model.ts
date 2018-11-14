@@ -18,7 +18,7 @@ class Hero {
     this.life = info.life;
     this.maxLife = info.maxLife || 20;
     this.armor = info.armor;
-    this.mana = info.mana || 10;
+    this.mana = info.mana || 5;
   }
 
   // 受到伤害
@@ -33,6 +33,11 @@ class Hero {
 
   addArmor(value: number) {
     this.armor += value;
+  }
+
+  initThisTurn() {
+    // 这个值需写入配置文件中
+    this.mana += 2;
   }
 }
 

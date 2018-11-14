@@ -16,6 +16,11 @@ const Wrapper = styled.div`
   /* border-radius: 8px; */
   cursor: move;
   position: relative;
+  opacity: 0.5;
+
+  &.can-use {
+    opacity: 1;
+  }
 
   .card-border {
     /* svg 的尺寸要设置的略大于父容器 */
@@ -32,17 +37,16 @@ const Wrapper = styled.div`
 
   p {
     margin: 0;
-    margin-bottom: 10px;
   }
 
   .name {
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 10%;
   }
 
   .desc.emoji {
-      font-size: 36px;
-    }
+    font-size: 30px;
+  }
 `;
 
 interface ICardViewProps {
@@ -53,7 +57,9 @@ interface ICardViewProps {
   desc: string;
   attack?: number;
   armor?: number;
+  mana: number;
   extraInfo?: string;
+  usable?: boolean;
 }
 
 interface IState {
@@ -116,11 +122,13 @@ class CardView extends Component<ICardViewProps> {
   };
 
   render() {
-    const { name, desc, attack, armor, source, isDragging, extraInfo } = this.props;
+    const { name, desc, attack, armor, source, isDragging, extraInfo, mana, 
+      usable=true } 
+      = this.props;
 
     return (
       <Wrapper 
-        className={classNames('card', source, { 'is-dragging': isDragging})}  
+        className={classNames('card', source, { 'is-dragging': isDragging, 'can-use': usable})}  
         onDoubleClick={this.handleDoubleClick}
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleLeave}
@@ -130,6 +138,7 @@ class CardView extends Component<ICardViewProps> {
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack as number > 0 && <p>攻击：{attack}</p>}
         {armor as number > 0  && <p>护甲：{armor}</p>}
+        <p>法力：{mana}</p>
 
         {(this.state.shouldShowInfo && !isDragging) && <CardDesc info={extraInfo} />}
       </Wrapper>
