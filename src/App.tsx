@@ -12,6 +12,7 @@ import EffectModel from './model/effect-model';
 import DropArea from './components/drop-area';
 import History from './components/history';
 import NextTurn from './components/next-turn';
+import RoughButton from './components/rough-button';
 
 import { card_target, game_turn, run_status, card_source } from './constants';
 import config from './config';
@@ -261,11 +262,17 @@ class App extends Component<IProps> {
           }
           </div>
 
-          <ShowHistoryButton onClick={this.toggleHistory}>
-            显示历史
-            </ShowHistoryButton>
-          {gameState.currentTurn === game_turn.hero
-            && <NextTurnButton onClick={this.nextTurn}>下一回合</NextTurnButton>}
+          <RoughButton
+            handleClick={this.toggleHistory}
+            text="显示历史" 
+            style={{position: 'absolute', top: 220, right: 180}}
+          />
+          {gameState.currentTurn === game_turn.hero && <RoughButton
+            text="下一回合"
+            handleClick={this.nextTurn}
+            style={{ position: 'absolute', top: 220, right: 50 }}
+          />
+          }
         </PlayerCardsArea>
 
         {gameState.effects.map(e => {
