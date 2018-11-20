@@ -102,14 +102,13 @@ class CardView extends Component<ICardViewProps> {
     (svg as any).appendChild(node);
   }
 
-  handleHover = () => {
+  handleHover = async () => {
     this.isMouseIn = true;
 
     // 延时之后显示额外的卡牌说明信息
-    delay(1000).then(() => {
-      if (!this.isMouseIn || this.props.isDragging) { return; }
-      this.setState({ shouldShowInfo: true });
-    })
+    await delay(1000);
+    if (!this.isMouseIn || this.props.isDragging) { return; }
+    this.setState({ shouldShowInfo: true });
   }
 
   handleLeave = () => {

@@ -55,7 +55,7 @@ class App extends Component<IProps> {
     decks.removeHeroCard(id);
   }
 
-  calculateCardEffect = (currentCard: CardModel) => {
+  calculateCardEffect = async (currentCard: CardModel) => {
     const { hero, monster, gameState } = this.props;
 
     // 出牌效果
@@ -80,9 +80,11 @@ class App extends Component<IProps> {
       }
 
       if (monster.life <= 0) {
-        delay(1000).then(() => gameState.runStatus = run_status.win);
+        await delay(1000);
+        gameState.runStatus = run_status.win;
       } else if (hero.life <= 0) {
-        delay(1000).then(() => gameState.runStatus = run_status.lose);
+        await delay(1000);
+        gameState.runStatus = run_status.lose;
       }
 
     } else if (currentCard.name === '防御') {
@@ -126,15 +128,15 @@ class App extends Component<IProps> {
     return monster.mana >= mana;
   }
 
-  nextTurn = () => {
+  nextTurn = async () => {
     const { gameState } = this.props;
     // TODO: 利用 reaction 来检查 currentTurn 的改变，自动触发
     gameState.currentTurn = game_turn.monster;
     gameState.toggleNextTurnTip();
     // 当切换回合的 tip 消失后，开始执行对手的操作
-    delay(1500).then(() => {
-      this.monsterStartAction();
-    });
+
+    await delay(1500);
+    this.monsterStartAction();
   }
 
   monsterStartAction() {
@@ -159,36 +161,35 @@ class App extends Component<IProps> {
     this.delayAndUseCard();
   }
 
-  delayAndUseCard = () => {
+  delayAndUseCard = async () => {
     const { decks, gameState } = this.props;
     const { monsterHand } = decks;
     if (gameState.isGameOver) { return; }
 
     let index = 0;
-    delay(1000).then(() => {
-      if (gameState.isGameOver) { return; }
-      
-      if (monsterHand.length === 0) {
-        decks.monsterTurnOver = true;
-        return;
-      }
 
-      let card = monsterHand[index];
-      while (index < monsterHand.length && !this.calculateCardUsable(monsterHand[index])) {
-        index++;
-      }
-      if (index > monsterHand.length - 1) {
-        decks.monsterTurnOver = true;
-        return;
-      }
+    await delay(1000);
+    if (gameState.isGameOver) { return; }
 
-      card = monsterHand[index];
-      this.calculateCardEffect(card);
-      decks.removeBossCard(card.id);
+    if (monsterHand.length === 0) {
+      decks.monsterTurnOver = true;
+      return;
+    }
 
-      this.delayAndUseCard();
-  })
+    let card = monsterHand[index];
+    while (index < monsterHand.length && !this.calculateCardUsable(monsterHand[index])) {
+      index++;
+    }
+    if (index > monsterHand.length - 1) {
+      decks.monsterTurnOver = true;
+      return;
+    }
 
+    card = monsterHand[index];
+    this.calculateCardEffect(card);
+    decks.removeBossCard(card.id);
+
+    this.delayAndUseCard();
 }
 
   showRunStatus() {
