@@ -20,12 +20,12 @@ class CardDesc extends React.Component<IProps> {
 }
 
 const Wrapper = styled.div`
-  width: 120%;
-  height: 120%;
+  width: 100%;
+  height: 100%;
   padding-top: 5px;
   position: absolute;
   top: 0%;
-  left: 115%;
+  left: 100%;
   background-color: #fff;
   border: 1px solid #999;
   box-shadow: 2px 2px 2px #aaa;

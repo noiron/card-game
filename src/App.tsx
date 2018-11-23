@@ -24,9 +24,11 @@ import HeroModel from './model/hero-model';
 import MonsterModel from './model/monster-model';
 import { Decks } from './decks';
 import { delay } from './utils';
+import RoughBox from './components/rough-box';
+import CardStack from './components/card-stack';
 
 const game_board_width = 700;
-const game_board_height = 500;
+const game_board_height = 600;
 
 interface IProps {
   gameState: GameStateModel;
@@ -39,7 +41,7 @@ interface IProps {
 class App extends Component<IProps> {
 
   componentDidMount() {
-    setBackground();
+    // setBackground();
   }
 
   // 玩家出牌
@@ -276,6 +278,16 @@ class App extends Component<IProps> {
           }
         </PlayerCardsArea>
 
+        <CardStackArea>
+          <CardStack
+            num={decks.monsterDeck.length}
+            style={{ left: 10, top: 10 }}
+          />
+          <CardStack
+            num={decks.heroDeck.length}
+            style={{ left: 10, bottom: 10 }} />
+        </CardStackArea>
+        
         {gameState.effects.map(e => {
           return <Effect
             name={e.name}
@@ -337,6 +349,7 @@ const Wrapper = styled.div`
   padding: 20px;
   margin: 40px auto;
   position: relative;
+  left: -60px;
 `;
 
 const Background = styled.svg`
@@ -382,7 +395,7 @@ const PlayerCardsArea = styled.div`
   position: relative;
 
   .card {
-    margin-right: 10px;
+    /* margin-right: 10px; */
     margin-bottom: 5px;
   }
 
@@ -397,7 +410,7 @@ const PlayerCardsArea = styled.div`
     height: 165px;
     position: absolute;
     left: 160px;
-    top: 10px;
+    top: 0px;
   }
 `;
 
@@ -409,13 +422,11 @@ const Dustbin = styled.div`
   display: box;
   justify-content: center;
   align-items: center;
-  /* border: 2px solid lightblue; */
-  /* border-radius: 10px; */
   margin: 10px 0;
   overflow-x: auto;
 
   .card {
-    margin-right: 20px;
+    /* margin-right: 20px; */
     flex: 0 0 90px;
   }
 
@@ -424,21 +435,10 @@ const Dustbin = styled.div`
   }
 `;
 
-// TODO: 按钮样式可复用
-const ShowHistoryButton = styled.button`
-  width: 100px;
-  height: 50px;
-  border: 2px solid #ddd;
-  position: absolute;
-  top: 220px;
-  right: 180px;
-`;
-
-const NextTurnButton = styled.button`
-  width: 100px;
-  height: 50px;
-  border: 2px solid #ddd;
-  position: absolute;
-  top: 220px;
-  right: 50px;
+const CardStackArea = styled.section`
+    width: 140px;
+    height: 240px;
+    position: absolute;
+    top: 140px;
+    right: -120px;
 `;

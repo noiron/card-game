@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 
   &.target-monster {
     right: 50px;
-    top: 20px;
+    top: 50px;
   }
 
   &.target-hero {

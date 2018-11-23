@@ -1,19 +1,17 @@
 import React, { Component, Ref } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import rough from 'roughjs';
-import { card_source, PlayerType } from '../constants';
+import { card_source, PlayerType, card_width, card_height } from '../constants';
 import { delay } from '../utils';
 import CardDesc from './card-info';
+import RoughBox from './rough-box';
 
 const Wrapper = styled.div`
-  width: 90px;
-  height: 120px;
-  /* border: 2px solid #000; */
+  width: ${card_width}px;
+  height: ${card_height}px;
   text-align: center;
   font-size: 14px;
   user-select: none;
-  /* border-radius: 8px; */
   cursor: move;
   position: relative;
   opacity: 0.5;
@@ -41,7 +39,9 @@ const Wrapper = styled.div`
 
   .name {
     font-size: 18px;
-    margin-bottom: 10%;
+    margin-bottom: 16%;
+    position: relative;
+    top: 12px;
   }
 
   .desc.emoji {
@@ -80,7 +80,7 @@ class CardView extends Component<ICardViewProps> {
   }
   
   componentDidMount() {
-    this.setBorder();
+    // this.setBorder();
   }
   
 
@@ -88,19 +88,19 @@ class CardView extends Component<ICardViewProps> {
     this.props.playCard();
   }
 
-  setBorder = () => {
-    const svg: SVGSVGElement = this.cardBorder;
+  // setBorder = () => {
+  //   const svg: SVGSVGElement = this.cardBorder;
 
-    const rc = rough.svg(svg);
-    const strokeColor = this.props.source === card_source.monster
-      ? 'red'
-      : 'black';
+  //   const rc = rough.svg(svg);
+  //   const strokeColor = this.props.source === card_source.monster
+  //     ? 'red'
+  //     : 'black';
 
-    const node = rc.rectangle(0, 0, 100, 130, {
-      stroke: strokeColor
-    });
-    (svg as any).appendChild(node);
-  }
+  //   const node = rc.rectangle(0, 0, 100, 130, {
+  //     stroke: strokeColor
+  //   });
+  //   (svg as any).appendChild(node);
+  // }
 
   handleHover = async () => {
     this.isMouseIn = true;
@@ -125,6 +125,8 @@ class CardView extends Component<ICardViewProps> {
       usable=true } 
       = this.props;
 
+    const strokeColor = source === card_source.monster ? 'red' : 'black';
+
     return (
       <Wrapper 
         className={classNames('card', source, { 'is-dragging': isDragging, 'can-use': usable})}  
@@ -132,7 +134,8 @@ class CardView extends Component<ICardViewProps> {
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleLeave}
       >
-        <svg className="card-border" ref={this.setSvgRef} />
+        {/* <svg className="card-border" ref={this.setSvgRef} /> */}
+        <RoughBox width={card_width} height={card_height} strokeColor={strokeColor} />
         <p className="name">{name}</p>
         <p className={desc.length <=2 ? 'desc emoji' : 'desc'}>{desc}</p>
         {attack as number > 0 && <p>攻击：{attack}</p>}
