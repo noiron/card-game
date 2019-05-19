@@ -13,6 +13,7 @@ import DropArea from './components/drop-area';
 import History from './components/history';
 import NextTurn from './components/next-turn';
 import RoughButton from './components/rough-button';
+import CardStackArea from './components/CardStackArea';
 
 import { card_target, game_turn, run_status, card_source } from './constants';
 import config from './config';
@@ -291,16 +292,10 @@ class App extends Component<IProps> {
           }
         </PlayerCardsArea>
 
-        <CardStackArea>
-          {/* TODO: 样式抽取 */}
-          <CardStack
-            num={decks.monsterDeck.length}
-            style={{ left: 20, top: '-20%' }}
-          />
-          <CardStack
-            num={decks.heroDeck.length}
-            style={{ left: 20, bottom: '-20%' }} />
-        </CardStackArea>
+        <CardStackArea
+          monsterLen={decks.monsterDeck.length}
+          heroLen={decks.heroDeck.length}
+        />
         
         {gameState.effects.map(e => {
           return <Effect
@@ -382,6 +377,7 @@ const TurnFlag = styled.div`
   transform: translate(-50%);
   color: green;
   white-space: pre;
+  font-size: 22px;
 `;
 
 const EnemyArea = styled.div`
@@ -460,10 +456,3 @@ const Dustbin = styled.div`
   }
 `;
 
-const CardStackArea = styled.section`
-    width: 140px;
-    height: 240px;
-    position: absolute;
-    top: 140px;
-    right: -120px;
-`;

@@ -9,7 +9,8 @@ import { delay } from '../utils';
 
 interface ICardStackProps {
   num: number;
-  style: any;
+  style?: any;
+  // className: string;
 }
 
 interface ICardStackState {
@@ -66,13 +67,14 @@ class CardStack extends React.Component<ICardStackProps> {
 
 
   render() {
-    const { num, style } = this.props;
+    const { num, ...rest } = this.props;
     const { shouldShowInfo } = this.state;
 
     return (
-      <Wrapper style={style}
+      <Wrapper
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleLeave}
+        {...rest}
       >
         <span>{num}</span>
         {shouldShowInfo && <Info>牌堆中还剩{num}张牌</Info>}
