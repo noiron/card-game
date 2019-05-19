@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   width: ${card_width}px;
   height: ${card_height}px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   user-select: none;
   cursor: move;
   position: relative;
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   }
 
   .name {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 16%;
     position: relative;
     top: 12px;

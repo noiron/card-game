@@ -43,5 +43,5 @@ export const init_cards_num = {
   monster: 1,
 }
 
-export const card_width = 120;
+export const card_width = 100;
 export const card_height = card_width * 1.3;

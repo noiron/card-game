@@ -227,6 +227,19 @@ class App extends Component<IProps> {
               armor={monster.armor}
               mana={monster.mana}
             />
+            <div className="card-list">
+            {
+              decks.monsterHand.map(card => {
+                return <Card
+                  {...card}
+                  playCard={() => {;}}
+                  usable={true}
+                  showCardBack={true}
+                  key={card.id}
+                />
+              })
+            }
+            </div>
           </EnemyArea>
 
           <Dustbin>
@@ -279,13 +292,14 @@ class App extends Component<IProps> {
         </PlayerCardsArea>
 
         <CardStackArea>
+          {/* TODO: 样式抽取 */}
           <CardStack
             num={decks.monsterDeck.length}
-            style={{ left: 10, top: 10 }}
+            style={{ left: 20, top: '-20%' }}
           />
           <CardStack
             num={decks.heroDeck.length}
-            style={{ left: 10, bottom: 10 }} />
+            style={{ left: 20, bottom: '-20%' }} />
         </CardStackArea>
         
         {gameState.effects.map(e => {
@@ -301,10 +315,10 @@ class App extends Component<IProps> {
         {
           config.show_game_info && (
             <div style={{ marginTop: '50px' }}>
-              <p>你的手牌数量：{decks.heroHand.length}</p>
-              <p>你的牌堆中的卡牌数量：{decks.heroDeck.length}</p>
-              <p>敌方手牌数量：{decks.monsterHand.length}</p>
-              <p>敌方牌堆中的卡牌数量：{decks.monsterDeck.length}</p>
+              {/* <p>你的手牌数量：{decks.heroHand.length}</p> */}
+              {/* <p>你的牌堆中的卡牌数量：{decks.heroDeck.length}</p> */}
+              {/* <p>敌方手牌数量：{decks.monsterHand.length}</p> */}
+              {/* <p>敌方牌堆中的卡牌数量：{decks.monsterDeck.length}</p> */}
             </div>
           )
         }
@@ -373,12 +387,24 @@ const TurnFlag = styled.div`
 const EnemyArea = styled.div`
   width: 100%;
   height: 130px;
-  /* border: 2px solid pink; */
-  /* border-radius: 10px; */
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: left;
+  padding: 10px 20px;
+  position: relative;
+
+  /* TODO: card-list 写成一个组件 */
+  .card-list {
+    width: calc(100% - 150px);
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    height: 135px;
+    position: absolute;
+    left: 170px;
+    top: 0px;
+  }
 `;
 
 const playerAreaHeight = 150;
@@ -389,8 +415,6 @@ const PlayerCardsArea = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 20px;
-  /* border: 2px solid lightgreen; */
-  /* border-radius: 10px; */
   box-sizing: border-box;
   position: relative;
 
@@ -406,10 +430,11 @@ const PlayerCardsArea = styled.div`
   .card-list {
     width: calc(100% - 150px);
     display: flex;
+    align-items: center;
     overflow-x: auto;
     height: 165px;
     position: absolute;
-    left: 160px;
+    left: 170px;
     top: 0px;
   }
 `;

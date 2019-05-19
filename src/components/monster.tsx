@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import rough from 'roughjs';
 
 const Wrapper = styled.div`
-  width: 120px;
-  height: 120px;
-  /* border: 2px solid #aaa; */
-  /* border-radius: 5px; */
+  width: 130px;
+  height: 130px;
   font-size: 12px;
   text-align: center;
   position: relative;

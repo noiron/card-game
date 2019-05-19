@@ -17,8 +17,9 @@ interface ICardStackState {
 }
 
 const Wrapper = styled.div`
-  width: ${card_width * 0.6}px;
-  height: ${card_height * 0.6}px;
+  width: ${card_width * 1}px;
+  height: ${card_height * 1}px;
+  line-height: ${card_height * 1}px;
   border: 2px solid #999;
   color: #333;
   border-radius: 4px;
@@ -26,7 +27,6 @@ const Wrapper = styled.div`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
-  line-height: 3em;
 `;
 
 const Info = styled.div`

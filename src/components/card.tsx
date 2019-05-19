@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DragSource, ConnectDragSource } from 'react-dnd';
 import { item_types, PlayerType } from '../constants';
 import CardView from './card-view';
+import CardBack from './card-back';
 
 const cardSource = {
   beginDrag(card: ICardProps) {
@@ -32,6 +33,7 @@ interface ICardProps {
   children?: any;
   extraInfo: string;
   usable: boolean;
+  showCardBack?: boolean;
 }
 
 interface ICardCollectedProps {
@@ -44,13 +46,16 @@ class Card extends Component<ICardProps & ICardCollectedProps> {
   }
 
   render() {
-    const { connectDragSource, ...cardProps } = this.props;
+    const { connectDragSource, showCardBack, ...cardProps } = this.props;
+
+    if (showCardBack) {
+      return <CardBack {...cardProps} />;
+    }
 
     return (
       connectDragSource && connectDragSource(<div className="card">
         <CardView {...cardProps} />
-      </div>
-      )
+      </div>)
     )
   }
 }
