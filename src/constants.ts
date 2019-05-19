@@ -45,3 +45,5 @@ export const init_cards_num = {
 
 export const card_width = 100;
 export const card_height = card_width * 1.3;
+
+export const mana_heal_per_turn = 2;
