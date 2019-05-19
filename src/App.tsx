@@ -25,11 +25,20 @@ import HeroModel from './model/hero-model';
 import MonsterModel from './model/monster-model';
 import { Decks } from './decks';
 import { delay } from './utils';
-import RoughBox from './components/rough-box';
-import CardStack from './components/card-stack';
 
 const game_board_width = 700;
 const game_board_height = 600;
+
+const CardList: any = styled.div`
+  width: calc(100% - 150px);
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  height: ${(props: any) => props.height || 135}px;
+  position: absolute;
+  left: 170px;
+  top: 0px;
+`;
 
 interface IProps {
   gameState: GameStateModel;
@@ -228,7 +237,7 @@ class App extends Component<IProps> {
               armor={monster.armor}
               mana={monster.mana}
             />
-            <div className="card-list">
+            <CardList>
             {
               decks.monsterHand.map(card => {
                 return <Card
@@ -240,7 +249,7 @@ class App extends Component<IProps> {
                 />
               })
             }
-            </div>
+            </CardList>
           </EnemyArea>
 
           <Dustbin>
@@ -264,7 +273,7 @@ class App extends Component<IProps> {
             mana={hero.mana}
             className="person"
           />
-          <div className="card-list">
+          <CardList height={165}>
           {
             decks.heroHand.map((card, index) => {
               const usable = this.calculateCardUsable(card);
@@ -277,7 +286,7 @@ class App extends Component<IProps> {
               />
             })
           }
-          </div>
+          </CardList>
 
           <RoughButton
             handleClick={this.toggleHistory}
@@ -353,8 +362,6 @@ function setBackground() {
 const Wrapper = styled.div`
   width: ${game_board_width}px;
   min-height: ${game_board_height}px;
-  /* border: 2px solid #000; */
-  /* border-radius: 15px; */
   padding: 20px;
   margin: 40px auto;
   position: relative;
@@ -389,18 +396,6 @@ const EnemyArea = styled.div`
   justify-content: left;
   padding: 10px 20px;
   position: relative;
-
-  /* TODO: card-list 写成一个组件 */
-  .card-list {
-    width: calc(100% - 150px);
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    height: 135px;
-    position: absolute;
-    left: 170px;
-    top: 0px;
-  }
 `;
 
 const playerAreaHeight = 150;
@@ -421,17 +416,6 @@ const PlayerCardsArea = styled.div`
 
   .person {
     margin-right: 20px;
-  }
-
-  .card-list {
-    width: calc(100% - 150px);
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    height: 165px;
-    position: absolute;
-    left: 170px;
-    top: 0px;
   }
 `;
 
