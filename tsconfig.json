@@ -20,6 +20,7 @@
     "noUnusedLocals": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "types": ["react", "jest"]
   },
   "exclude": [
     "node_modules",
